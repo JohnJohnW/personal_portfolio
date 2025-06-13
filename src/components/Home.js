@@ -5,9 +5,9 @@ function Home() {
   return (
     <div className="home">
       <div className="welcome-section">
-        <h1>Welcome to My Portfolio</h1>
+        <h1>Welcome to my portfolio</h1>
         <div className="typewriter">
-          <p>Hi, I'm John Wynter, a passionate Law and IT student.</p>
+          <p>Hi, I'm John Wynter, a passionate Law and IT student</p>
         </div>
       </div>
       <div className="skills-section fade-in">
@@ -35,7 +35,11 @@ function Home() {
           </div>
           <div className="skill">
             <i className="fab fa-react"></i>
-            <p>SQL</p>
+            <p>Flask</p>
+          </div>
+          <div className="skill">
+            <i className="fab fa-react"></i>
+            <p>MySQL</p>
           </div>
         </div>
       </div>
@@ -43,9 +47,9 @@ function Home() {
         <Projects /> {/* Replace static project cards with the Projects component */}
       </div>
       <div className="contact-prompt fade-in">
-        <h2>Let's Get In Touch</h2>
+        <h2>Let's get in touch</h2>
         <p>If you would like to collaborate or just want to say hi, feel free to contact me!</p>
-        <a href="/contact" className="contact-button">Contact Me</a>
+        <a href="/contact" className="contact-button">Contact me</a>
       </div>
     </div>
   );
