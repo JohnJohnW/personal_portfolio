@@ -28,7 +28,7 @@ function About() {
         <div className="timeline-container right">
           <div className="content">
             <h2>2025</h2>
-            <p>Great things to come!</p>
+            <p>Professionally working on website administration, contract automation, and project management vis work integrated learning for Masters of IT students.</p>
           </div>
         </div>
       </div>
