@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" 
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="static/style/style.css">
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: #121212;
+        color: #f0f0f0;
+      }
+      .timeline {
+        position: relative;
+        max-width: 900px;
+        margin: auto;
+        padding: 80px 20px;
+      }
+      .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 0;
+        background: linear-gradient(to bottom, #5e35b1, #ffeb3b);
+        animation: growLine 2s ease-out forwards;
+      }
+      @keyframes growLine {
+        0% { height: 0; }
+        100% { height: 100%; }
+      }
+      .entry {
+        position: relative;
+        width: 45%;
+        padding: 30px 40px;
+        box-sizing: border-box;
+        background: #1e1e1e;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        opacity: 0;
+        animation: slideIn 0.8s ease forwards;
+        margin-bottom: 60px;
+      }
+      .entry.left {
+        left: 0;
+        transform: translateX(-10%) translateY(40px);
+        animation-name: slideInLeft;
+      }
+      .entry.right {
+        left: 55%;
+        transform: translateX(10%) translateY(40px);
+        animation-name: slideInRight;
+      }
+      .entry .vector {
+        position: absolute;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        background: linear-gradient(to bottom right, #5e35b1, #ffeb3b);
+        border-radius: 50%;
+        z-index: 2;
+      }
+      .entry.left .vector {
+        right: -44px;
+      }
+      .entry.right .vector {
+        left: -44px;
+      }
+      .entry h3 {
+        margin-top: 0;
+        color: #ffffff;
+      }
+      .entry p {
+        margin: 0;
+        color: #cccccc;
+      }
+      @keyframes slideInLeft {
+        0% { opacity: 0; transform: translateX(-10%) translateY(40px); }
+        100% { opacity: 1; transform: translateX(0) translateY(0); }
+      }
+      @keyframes slideInRight {
+        0% { opacity: 0; transform: translateX(10%) translateY(40px); }
+        100% { opacity: 1; transform: translateX(0) translateY(0); }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm" id="nav">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+          <img src="static/img/favicon.ico" alt="RollCall Logo" height="30" class="me-2">
+          Personal portfolio
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+              </li>  
+            <li class="nav-item">
+              <a class="nav-link" href="articles.html">Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="projects.html">Projects</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="videos.html">Videos</a>
+              </li>    
+            <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact</a>
+              </li>  
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div id="carouselExampleCaptions" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="static/img/aboutCover.png" class="d-block w-100 img-fluid" alt="About image" id="carouselImage">
+          <div class="carousel-caption d-none d-md-block">
+            <div class="overlay">
+              <h1>About</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="container my-5">
+      <div class="timeline">
+        <div class="entry left" style="animation-delay: 0.2s">
+          <h3>2023</h3>
+          <p>Moved to Brisbane to pursue a Bachelor of Laws/Information Technology (Honours).</p>
+        </div>
+        <div class="entry right" style="animation-delay: 0.4s">
+          <h3>2024</h3>
+          <p>Began working in the legal industry at Dundas Lawyers.</p>
+          <br>
+          <p>Also first MMA fight!</p>
+        </div>
+        <div class="entry left" style="animation-delay: 0.6s">
+          <h3>2025</h3>
+          <p>Worked on professional projects, including QUT MIT WIL Industry Project leadership, python automation for forensic legal investigations and logical mapping/automation for QITC comprehensive contracts.</p>
+          <br>
+          <p>Also first BJJ competition!</p>
+        </div>
+        <div class="entry right" style="animation-delay: 0.8s">
+          <h3>Future</h3>
+          <p>Becoming the greatest mind in law and technology.</p>
+          <br>
+          <p>Also earning my blue belt in BJJ!</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-dark py-4">
+      <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <a href="index.html" class="d-flex align-items-center text-decoration-none mb-3 mb-md-0">
+          <img src="static/img/favicon.ico" alt="RollCall Logo" height="30" class="me-2">
+          <span class="text-muted">Personal portfolio | John Wynter</span>
+        </a>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="http://github.com/JohnJohnW" aria-label="Git Hub">
+              <img src="static/img/githubIcon.png" alt="Git Hub Icon" width="24" height="24">
+            </a>
+          </li>
+          <li class="nav-item ms-3">
+            <a class="nav-link" href="https://www.youtube.com/@john_wynter" aria-label="YouTube">
+              <img src="static/img/youtubeIcon.png" alt="YouTube Icon" width="24" height="24">
+            </a>
+          </li>
+          <li class="nav-item ms-3">
+            <a class="nav-link" href="www.linkedin.com/in/john-wynter" aria-label="LinkedIn">
+              <img src="static/img/linkedinIcon.png" alt="LinkedIn Icon" width="24" height="24">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" 
+            crossorigin="anonymous"></script>
+  </body>
+</html>
