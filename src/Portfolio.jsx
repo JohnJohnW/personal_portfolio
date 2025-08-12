@@ -191,7 +191,7 @@ export default function Portfolio() {
         <div className="backdrop-blur-xl bg-black/20 border border-white/10 shadow-lg rounded-2xl">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
-              <img src="/apple-touch-icon.png" alt="Site icon" className="h-8 w-8 rounded-xl object-cover" />
+              <img src="/favicon.ico" alt="Site icon" className="h-8 w-8 rounded-xl object-cover" />
               <span className="font-semibold tracking-tight">{DATA.name}</span>
             </div>
             <nav className="hidden sm:flex items-center gap-1">
