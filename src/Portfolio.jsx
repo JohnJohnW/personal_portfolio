@@ -6,9 +6,9 @@ import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Fol
 
 const DATA = {
   name: "John Wynter",
-  role: "Law | IT",
+  role: "Bachelor of Laws / IT (Honours) • Major: Information Systems",
   blurb:
-    "QUT Bachelor of Laws/IT (Honours) student majoring in Information Systems. Building AI and automation solutions for legal workflows and SMBs, with experience across Python, n8n, OpenAI agents, and privacy‑focused compliance tooling.",
+    "QUT Bachelor of Laws/IT (Hons) student majoring in Information Systems. Building AI and automation solutions for legal workflows and SMBs, with experience across Python, n8n, AI agents, and privacy-focused compliance tooling.",
   location: "Brisbane / Remote",
   avatar: "/personal_portfolio/headshot.png",
   resume: "/personal_portfolio/John_Wynter_Resume.pdf",
@@ -42,7 +42,7 @@ const DATA = {
     {
       title: "Cache to the Future",
       tag: "2025 • Hackathon Project",
-      desc: "Team solution for QUT Code Network Winter Hackathon 2025: a digital time capsule that encrypts messages and provides time‑based decryption keys, plus an on‑site decryption tool for downloaded files.",
+      desc: "Team solution for QUT Code Network Winter Hackathon 2025: a digital time capsule that encrypts messages and provides time-based decryption keys, plus an on-site decryption tool for downloaded files.",
       links: [
         { href: "https://github.com/mrjwei/cache-to-the-future", label: "Repo" },
       ],
@@ -51,9 +51,9 @@ const DATA = {
     {
       title: "Federal Court Judgement Analysis",
       tag: "2025 • n8n + Agents",
-      desc: "Automated daily workflows involving analysis of the Federal Court judgements RSS feed using n8n and AI‑agent integrations.",
+      desc: "Automated daily workflows involving analysis of the Federal Court judgements RSS feed using n8n and AI-agent integrations.",
       links: [],
-      stack: ["n8n", "OpenAI agents", "Python"],
+      stack: ["n8n", "AI agents", "Python"],
     },
     {
       title: "QITC Contract Automation",
@@ -291,20 +291,21 @@ export default function Portfolio() {
                   </div>
                 </div>
 
-                {/* Skills moved under the greeting */}
-                <div className="mt-5 grid grid-cols-3 gap-3">
-                  {['Python','JavaScript','React','n8n','OpenAI agents','WordPress'].map((sk) => (
-                    <div key={sk} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-sm">
-                      {sk}
-                    </div>
-                  ))}
-                </div>
-
+                {/* Consulting row */}
                 <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="text-sm text-neutral-400">Open to consulting • {DATA.location}</div>
                   <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
                     Get in touch <ArrowRight className="h-4 w-4" />
                   </a>
+                </div>
+
+                {/* Skills moved below the consulting row */}
+                <div className="mt-5 grid grid-cols-3 gap-3">
+                  {['Python','JavaScript','React','n8n','AI agents','WordPress'].map((sk) => (
+                    <div key={sk} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-sm">
+                      {sk}
+                    </div>
+                  ))}
                 </div>
               </motion.div>
             </Tilt>
@@ -379,7 +380,7 @@ export default function Portfolio() {
                 org: "QUT Law, Innovation & Technology Society",
                 when: "2024 — Present",
                 bullets: [
-                  "Organised legal‑tech events",
+                  "Organised legal-tech hackathons and AI workshops",
                   "Partnered with firms for student projects",
                 ],
               },
@@ -405,11 +406,11 @@ export default function Portfolio() {
         <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.5 }}
           className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-tr from-indigo-500/20 via-fuchsia-500/20 to-sky-500/20 backdrop-blur-xl p-6">
           <div className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-60"
-               style={{ background: "url('data:image/svg+xml;utf8, %3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" stroke=\"white\" stroke-opacity=\"0.06\"%3E%3Cpath d=\"M0 30h60M30 0v60\"/%3E%3C/g%3E%3C/svg%3E')" }} />
+               style={{ background: "url('data:image/svg+xml;utf8, %3Csvg width=\\\"60\\\" height=\\\"60\\\" viewBox=\\\"0 0 60 60\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\"%3E%3Cg fill=\\\"none\\\" stroke=\\\"white\\\" stroke-opacity=\\\"0.06\\\"%3E%3Cpath d=\\\"M0 30h60M30 0v60\\\"/%3E%3C/g%3E%3C/svg%3E')"}} />
           <div className="relative z-10 grid md:grid-cols-2 gap-6 items-center">
             <div>
               <h3 className="text-xl font-semibold">Let’s build something great.</h3>
-              <p className="mt-2 text-sm text-neutral-100/90">From prototypes to production. Privacy‑first, automation‑heavy, cleanly engineered.</p>
+              <p className="mt-2 text-sm text-neutral-100/90">From prototypes to production. Privacy-first, automation-heavy, cleanly engineered.</p>
             </div>
             <div className="flex md:justify-end gap-3">
               <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-white/90 text-neutral-900 px-4 py-2 hover:bg-white">
