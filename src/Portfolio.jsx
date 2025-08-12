@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { Github, Linkedin, Mail, Sparkles, Youtube } from "lucide-react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Folder, Cpu, Wand2, Download, Phone, PlaySquare, Youtube } from "lucide-react";
+
+/* Personal portfolio — GH Pages + Web3Forms */
 
 const DATA = {
   name: "John Wynter",
   role: "Information Systems · Legal Tech · Automation",
-  blurb: "QUT IT (Hons) student building AI + automation for legal workflows and SMBs. Experience across Python, n8n, OpenAI agents, and privacy‑aware compliance tooling.",
+  blurb:
+    "QUT IT (Hons) student building AI + automation for legal workflows and SMBs. Experience across Python, n8n, OpenAI agents, and privacy‑aware compliance tooling.",
   location: "Brisbane / Remote",
   avatar: "/personal_portfolio/headshot.png",
   resume: "/personal_portfolio/John_Wynter_Resume.pdf",
@@ -217,7 +220,7 @@ export default function Portfolio() {
         <div className="backdrop-blur-xl bg-black/20 border border-white/10 shadow-lg rounded-2xl">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
-              <img src="/apple-touch-icon.png" alt="Site icon" className="h-8 w-8 rounded-xl object-cover" />
+              <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="Site icon" className="h-8 w-8 rounded-xl object-cover" />
               <span className="font-semibold tracking-tight">{DATA.name}</span>
             </div>
             <nav className="hidden sm:flex items-center gap-1">
