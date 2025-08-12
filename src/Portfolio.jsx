@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, Sun, Moon, ChevronRight, Folder, Cpu, Wand2, Download, Phone, Globe, PlaySquare } from "lucide-react";
