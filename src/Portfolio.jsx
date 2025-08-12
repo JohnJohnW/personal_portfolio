@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Folder, Cpu, Wand2, Download, Phone, PlaySquare, Youtube } from "lucide-react";
-
-/* Personal portfolio — GH Pages + Web3Forms */
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import { Github, Linkedin, Mail, Sparkles, Youtube } from "lucide-react";
 
 const DATA = {
   name: "John Wynter",
   role: "Information Systems · Legal Tech · Automation",
-  blurb:
-    "QUT IT (Hons) student building AI + automation for legal workflows and SMBs. Experience across Python, n8n, OpenAI agents, and privacy‑aware compliance tooling.",
+  blurb: "QUT IT (Hons) student building AI + automation for legal workflows and SMBs. Experience across Python, n8n, OpenAI agents, and privacy‑aware compliance tooling.",
   location: "Brisbane / Remote",
   avatar: "/personal_portfolio/headshot.png",
   resume: "/personal_portfolio/John_Wynter_Resume.pdf",
@@ -49,15 +46,6 @@ const DATA = {
       stack: ["React", "Framer Motion", "Tailwind"],
     },
     {
-      title: "Ethics & Regulation of AI in Predictive Policing",
-      tag: "2024 • Research site",
-      desc: "Brief educational site compiling sources on AI regulation and predictive policing.",
-      links: [
-        { href: "https://github.com/JohnJohnW/ethics_and_regulation_of_ai_in_predictive_policing", label: "Repo" }
-      ],
-      stack: ["HTML", "CSS", "JS"],
-    },
-    {
       title: "Federal Court Judgement Analysis",
       tag: "2025 • n8n + Agents",
       desc: "Automated RSS ingestion and AI summaries of Federal Court judgements with routing to email and dashboards.",
@@ -72,8 +60,7 @@ const DATA = {
       stack: ["VBA", "Word / Doxsera"],
     },
     {
-      title: "MIT WIL Project Leadership (QUT)
-      ",
+      title: "MIT WIL Project Leadership (QUT)",
       tag: "2024 • Team Lead",
       desc: "Led Masters IT WIL project to auto‑generate ERDs for forensic legal investigations in Python.",
       links: [],
