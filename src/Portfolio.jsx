@@ -6,9 +6,9 @@ import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Fol
 
 const DATA = {
   name: "John Wynter",
-  role: "Information Systems · Legal Tech · Automation",
+  role: "Bachelor of Laws / IT (Honours) • Major: Information Systems",
   blurb:
-    "QUT IT (Hons) student building AI + automation for legal workflows and SMBs. Experience across Python, n8n, OpenAI agents, and privacy‑aware compliance tooling.",
+    "QUT Bachelor of Laws/IT (Hons) student majoring in Information Systems. Building AI and automation solutions for legal workflows and SMBs, with experience across Python, n8n, OpenAI agents, and privacy‑focused compliance tooling.",
   location: "Brisbane / Remote",
   avatar: "/personal_portfolio/headshot.png",
   resume: "/personal_portfolio/John_Wynter_Resume.pdf",
@@ -22,7 +22,7 @@ const DATA = {
     {
       title: "Contract Clause Library",
       tag: "2025 • React",
-      desc: "A fully responsive, searchable online library of reusable contract clauses, designed for lawyers and legal teams to quickly find and adapt pre‑built provisions. Built with React, featuring category filters, keyword search, and clean UI for efficient legal drafting.",
+      desc: "Responsive online library of reusable contract clauses for quick reference and drafting by legal teams.",
       links: [
         { href: "https://johnjohnw.github.io/contract_clause_library/", label: "Live" },
         { href: "https://github.com/JohnJohnW/contract_clause_library", label: "Repo" },
@@ -32,7 +32,7 @@ const DATA = {
     {
       title: "Telcom Compliance",
       tag: "2025 • React",
-      desc: "A static microsite providing telecom industry compliance resources and testing references. Designed as a lightweight, easily deployable resource hub, helping professionals access essential compliance data without complex navigation.",
+      desc: "Static microsite with telecom compliance references. Lightweight demo resource and quick lookup tool.",
       links: [
         { href: "https://johnjohnw.github.io/telcom_compliance/", label: "Live" },
         { href: "https://github.com/JohnJohnW/telcom_compliance", label: "Repo" },
@@ -42,39 +42,39 @@ const DATA = {
     {
       title: "Cache to the Future",
       tag: "2025 • Hackathon Project",
-      desc: "A QUT Code Network Winter Hackathon 2025 project — a secure, digital time capsule application that encrypts user‑submitted messages and releases time‑locked decryption keys based on chosen dates. Mimics the physical act of burying and unearthing a time capsule, and includes an integrated decryption tool for downloaded files.",
+      desc: "Team solution for QUT Code Network Winter Hackathon 2025: a digital time capsule that encrypts messages and provides time‑based decryption keys, plus an on‑site decryption tool for downloaded files.",
       links: [
         { href: "https://github.com/mrjwei/cache-to-the-future", label: "Repo" },
       ],
-      stack: ["React", "Crypto APIs", "JavaScript"],
+      stack: ["React", "JavaScript"],
     },
     {
       title: "Federal Court Judgement Analysis",
       tag: "2025 • n8n + Agents",
-      desc: "An automated pipeline using n8n and AI agents to ingest daily RSS feeds of Federal Court judgements, summarise them with AI, and route results to targeted email recipients and analytical dashboards for legal teams.",
+      desc: "Automated daily workflows involving analysis of the Federal Court judgements RSS feed using n8n and AI‑agent integrations.",
       links: [],
       stack: ["n8n", "OpenAI agents", "Python"],
     },
     {
       title: "QITC Contract Automation",
       tag: "2025 • Legal Ops",
-      desc: "A VBA + Doxsera‑driven solution for generating Queensland Information Technology Contract (QITC) documents end‑to‑end. Automates population of contract templates, reduces drafting time, and ensures compliance with QITC requirements.",
+      desc: "Automated the document generation process for QITC comprehensive contracts using VBA and Doxsera templates.",
       links: [],
       stack: ["VBA", "Word / Doxsera"],
     },
     {
       title: "MIT WIL Project Leadership (QUT)",
       tag: "2024 • Team Lead",
-      desc: "Led a Masters IT Work Integrated Learning (WIL) team project to automatically generate Entity‑Relationship Diagrams (ERDs) for forensic legal investigations using Python, enhancing efficiency in data mapping and evidence analysis.",
+      desc: "Organised and managed a WIL project for Masters IT students (Dundas Lawyers × QUT) involving an automated ERD program for forensic legal investigations using Python.",
       links: [],
-      stack: ["Python", "Graph", "Automation"],
+      stack: ["Python"],
     },
     {
       title: "Forensic Investigation Automation",
       tag: "2024 • Python",
-      desc: "Developed a Python‑based web scraping pipeline to track and log business activity/availability, providing actionable legitimacy insights for investigative purposes. Uses Requests and BeautifulSoup for robust and repeatable data extraction.",
+      desc: "Developed a Python program to track availability/activity statuses of businesses during forensic legal investigations to inform legitimacy insights.",
       links: [],
-      stack: ["Python", "Requests", "BeautifulSoup"],
+      stack: ["Python"],
     },
   ],
 };
