@@ -50,10 +50,12 @@ const DATA = {
   ],
 };
 
+// Helper: convert channelId UC... -> uploads playlist UU...
 const uploadsPlaylist = (channelId) =>
   channelId && channelId.startsWith("UC") ? `UU${channelId.slice(2)}` : "";
 
 function useTheme() {
+  // Always dark UI (background dark, text light). No toggle per design choice.
   const [dark] = useState(true);
   useEffect(() => {
     const root = document.documentElement;
@@ -155,6 +157,7 @@ export default function Portfolio() {
     setActive(id);
   };
 
+  // Web3Forms submit
   const onSubmit = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
@@ -216,7 +219,241 @@ export default function Portfolio() {
         </div>
       </header>
 
-      {/* Remaining sections unchanged from previous full version */}
+      <section id="home" className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">
+              {DATA.name}
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-sky-400">{DATA.role}</span>
+            </motion.h1>
+            <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              className="mt-4 text-base/7 text-neutral-300">{DATA.blurb}</motion.p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="#projects" onClick={scrollTo("projects")} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-xl hover:bg-white/10 transition">
+                <Rocket className="h-4 w-4" /> Explore projects
+              </a>
+              <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-indigo-500 via-fuchsia-500 to-sky-500 px-4 py-2 text-white shadow-lg hover:opacity-90 transition">
+                <Mail className="h-4 w-4" /> Contact
+              </a>
+            </div>
+            <div className="mt-6 flex gap-3">
+              {DATA.socials.map((s) => (
+                <a key={s.label} href={s.href} target="_blank" rel="noreferrer noopener" className="group" aria-label={s.label} title={s.label}>
+                  <div className="h-10 w-10 grid place-items-center rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl group-hover:bg-white/10 transition">
+                    <s.icon className="h-5 w-5" />
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div className="relative">
+            <Tilt>
+              <motion.div initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}
+                className="relative rounded-3xl border border-white/10 bg-black/20 backdrop-blur-xl p-6 shadow-2xl"
+                style={{ transformStyle: "preserve-3d" }}>
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-sky-500">
+                    <img src={DATA.avatar} alt="John Wynter headshot" className="h-full w-full object-cover"
+                      onError={(e)=>{ e.currentTarget.style.display='none'; }} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-neutral-400">Hi, I’m</p>
+                    <p className="text-xl font-semibold">{DATA.name}</p>
+                  </div>
+                </div>
+                <div className="mt-5 grid grid-cols-3 gap-3">
+                  {['Python','TypeScript','React','FastAPI','n8n','OpenAI'].map((sk) => (
+                    <div key={sk} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-sm">
+                      {sk}
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 flex items-center justify-between gap-3">
+                  <div className="text-sm text-neutral-400">Open to consulting • {DATA.location}</div>
+                  <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
+                    Get in touch <ArrowRight className="h-4 w-4" />
+                  </a>
+                </div>
+              </motion.div>
+            </Tilt>
+          </div>
+        </div>
+      </section>
+
+      <Section id="projects" title="Projects" icon={Folder} subtitle="Selected work.">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {DATA.projects.map((p, i) => (
+            <motion.article key={p.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: i * 0.03 }}
+              className="relative group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 hover:border-white/20 hover:shadow-xl transition">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="font-semibold">{p.title}</h3>
+                <span className="text-xs text-neutral-400">{p.tag}</span>
+              </div>
+              <p className="mt-2 text-sm/6 text-neutral-200/90">{p.desc}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {p.stack.map((s) => (
+                  <span key={s} className="text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1">{s}</span>
+                ))}
+              </div>
+              <div className="mt-4 flex gap-3">
+                {p.links.map((l) => (
+                  <a key={l.label} href={l.href} className="text-sm inline-flex items-center gap-1 hover:underline">
+                    {l.label} <ChevronRight className="h-3.5 w-3.5" />
+                  </a>
+                ))}
+              </div>
+              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(99,102,241,.25), rgba(236,72,153,.25), rgba(14,165,233,.25), rgba(99,102,241,.25))" }} />
+            </motion.article>
+          ))}
+        </div>
+      </Section>
+
+      <Section id="videos" title="Videos" icon={PlaySquare} subtitle="Latest uploads.">
+        <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl">
+          <div className="aspect-video w-full">
+            <iframe
+              className="h-full w-full"
+              src={`https://www.youtube.com/embed?listType=playlist&list=${uploadsPlaylist("UCPjlP0gPZNv9C1R3koFaePw")}`}
+              title="YouTube playlist"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+        </div>
+        <div className="mt-6 flex justify-end">
+          <a href="https://www.youtube.com/@john_wynter" target="_blank" rel="noreferrer noopener" className="text-sm inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-xl hover:bg-white/10">
+            <Youtube className="h-4 w-4"/> View channel <ChevronRight className="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </Section>
+
+      <Section id="experience" title="Experience" icon={Cpu} subtitle="Selected roles & impact.">
+        <div className="relative">
+          <div className="absolute left-3 top-0 bottom-0 w-px bg-white/10" />
+          <ul className="space-y-6">
+            {[
+              {
+                role: "Administrative Assistant",
+                org: "Dundas Lawyers",
+                when: "Mar 2024 — Present",
+                bullets: [
+                  "Built automations for content ops and compliance reporting",
+                  "Supported AI + data projects across marketing and legal ops",
+                ],
+              },
+              {
+                role: "Industry Coordinator",
+                org: "QUT Law, Innovation & Technology Society",
+                when: "2024 — Present",
+                bullets: [
+                  "Organised legal‑tech hackathons and AI workshops",
+                  "Partnered with firms for student projects",
+                ],
+              },
+            ].map((e, i) => (
+              <motion.li key={i} initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.4 }} className="relative pl-10">
+                <div className="absolute left-0 top-1.5 h-6 w-6 rounded-xl bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-sky-500 border border-white/20" />
+                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium">{e.role} • {e.org}</p>
+                    <span className="text-xs text-neutral-400">{e.when}</span>
+                  </div>
+                  <ul className="mt-2 list-disc list-inside text-sm text-neutral-200/90">
+                    {e.bullets.map((b, j) => <li key={j}>{b}</li>)}
+                  </ul>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </Section>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.5 }}
+          className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-tr from-indigo-500/20 via-fuchsia-500/20 to-sky-500/20 backdrop-blur-xl p-6">
+          <div className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-60"
+               style={{ background: "url('data:image/svg+xml;utf8, %3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" stroke=\"white\" stroke-opacity=\"0.06\"%3E%3Cpath d=\"M0 30h60M30 0v60\"/%3E%3C/g%3E%3C/svg%3E')" }} />
+          <div className="relative z-10 grid md:grid-cols-2 gap-6 items-center">
+            <div>
+              <h3 className="text-xl font-semibold">Let’s build something great.</h3>
+              <p className="mt-2 text-sm text-neutral-100/90">From prototypes to production. Privacy‑first, automation‑heavy, cleanly engineered.</p>
+            </div>
+            <div className="flex md:justify-end gap-3">
+              <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-white/90 text-neutral-900 px-4 py-2 hover:bg-white">
+                <Wand2 className="h-4 w-4"/> Start a project
+              </a>
+              <a href={DATA.resume} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-xl hover:bg-white/10">
+                <Download className="h-4 w-4"/> Download CV
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      <Section id="contact" title="Contact" icon={Phone} subtitle="Tell me about your idea. I’ll get back within a day.">
+        <motion.form initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }}
+          onSubmit={onSubmit}
+          className="grid md:grid-cols-2 gap-4 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6">
+          <div className="grid gap-3">
+            <label className="text-sm">Name
+              <input name="name" required className="mt-1 w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
+            </label>
+            <label className="text-sm">Email
+              <input name="email" type="email" required className="mt-1 w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
+            </label>
+            <label className="text-sm">Budget
+              <select name="budget" className="mt-1 w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2">
+                <option>Undecided</option>
+                <option>$2k–$5k</option>
+                <option>$5k–$15k</option>
+                <option>$15k+</option>
+              </select>
+            </label>
+          </div>
+          <div className="grid gap-3">
+            <label className="text-sm">Project details
+              <textarea name="message" rows={7} className="mt-1 w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="What are we building?" />
+            </label>
+            <div className="flex justify-end">
+              <button className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-indigo-500 via-fuchsia-500 to-sky-500 px-4 py-2 text-white shadow-lg hover:opacity-90">
+                <Rocket className="h-4 w-4"/> Send
+              </button>
+            </div>
+          </div>
+        </motion.form>
+      </Section>
+
+      <AnimatePresence>
+        {toast && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl px-4 py-2 shadow-xl">
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <footer className="relative z-10 border-t border-white/10 mt-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-sm text-neutral-400 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span>© {new Date().getFullYear()} {DATA.name}. All rights reserved.</span>
+          <div className="flex items-center gap-3">
+            {DATA.socials.map((s) => (
+              <a key={s.label} href={s.href} className="hover:text-white">{s.label}</a>
+            ))}
+          </div>
+        </div>
+      </footer>
+
+      <Dock items={[
+        { icon: Sparkles, label: "Home", onClick: scrollTo("home") },
+        { icon: Folder, label: "Projects", onClick: scrollTo("projects") },
+        { icon: PlaySquare, label: "Videos", onClick: scrollTo("videos") },
+        { icon: Cpu, label: "Experience", onClick: scrollTo("experience") },
+        { icon: Phone, label: "Contact", onClick: scrollTo("contact") },
+      ]} />
     </div>
   );
 }
