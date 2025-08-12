@@ -20,31 +20,70 @@ const DATA = {
   ],
   projects: [
     {
+      title: "Contract Clause Library",
+      tag: "2025 • React",
+      desc: "Public, searchable library of reusable contract clauses (frontend).",
+      links: [
+        { href: "https://johnjohnw.github.io/contract_clause_library/", label: "Live" },
+        { href: "https://github.com/JohnJohnW/contract_clause_library", label: "Repo" },
+      ],
+      stack: ["React", "HTML", "CSS"],
+    },
+    {
+      title: "Telcom Compliance",
+      tag: "2025 • React",
+      desc: "Static microsite for telecom-related compliance references/testing (demo).",
+      links: [
+        { href: "https://johnjohnw.github.io/telcom_compliance/", label: "Live" },
+      ],
+      stack: ["React"],
+    },
+    {
+      title: "Personal Portfolio",
+      tag: "2025 • React + Framer Motion",
+      desc: "This site — animated, dark UI with GH Pages deployment and Web3Forms contact.",
+      links: [
+        { href: "https://johnjohnw.github.io/personal_portfolio/", label: "Live" },
+        { href: "https://github.com/JohnJohnW/personal_portfolio", label: "Repo" },
+      ],
+      stack: ["React", "Framer Motion", "Tailwind"],
+    },
+    {
+      title: "Ethics & Regulation of AI in Predictive Policing",
+      tag: "2024 • Research site",
+      desc: "Brief educational site compiling sources on AI regulation and predictive policing.",
+      links: [
+        { href: "https://github.com/JohnJohnW/ethics_and_regulation_of_ai_in_predictive_policing", label: "Repo" }
+      ],
+      stack: ["HTML", "CSS", "JS"],
+    },
+    {
       title: "Federal Court Judgement Analysis",
       tag: "2025 • n8n + Agents",
       desc: "Automated RSS ingestion and AI summaries of Federal Court judgements with routing to email and dashboards.",
-      links: [{ href: "#", label: "Details" }],
+      links: [],
       stack: ["n8n", "OpenAI agents", "Python"],
     },
     {
       title: "QITC Contract Automation",
       tag: "2025 • Legal Ops",
       desc: "End‑to‑end generation for QITC comprehensive contracts using VBA + Doxsera templates.",
-      links: [{ href: "#", label: "Case notes" }],
+      links: [],
       stack: ["VBA", "Word / Doxsera"],
     },
     {
-      title: "MIT WIL Project Leadership (QUT)",
+      title: "MIT WIL Project Leadership (QUT)
+      ",
       tag: "2024 • Team Lead",
       desc: "Led Masters IT WIL project to auto‑generate ERDs for forensic legal investigations in Python.",
-      links: [{ href: "#", label: "Write‑up" }],
+      links: [],
       stack: ["Python", "Graph", "Automation"],
     },
     {
       title: "Forensic Investigation Automation",
       tag: "2024 • Python",
       desc: "Web‑scraping pipeline to track business activity/availability for legitimacy insights.",
-      links: [{ href: "#", label: "Repo" }],
+      links: [],
       stack: ["Python", "Requests", "BeautifulSoup"],
     },
   ],
@@ -191,7 +230,7 @@ export default function Portfolio() {
         <div className="backdrop-blur-xl bg-black/20 border border-white/10 shadow-lg rounded-2xl">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
-              <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="Site icon" className="h-8 w-8 rounded-xl object-cover" />
+              <img src="/apple-touch-icon.png" alt="Site icon" className="h-8 w-8 rounded-xl object-cover" />
               <span className="font-semibold tracking-tight">{DATA.name}</span>
             </div>
             <nav className="hidden sm:flex items-center gap-1">
