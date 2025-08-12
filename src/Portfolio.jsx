@@ -8,7 +8,7 @@ const DATA = {
   name: "John Wynter",
   role: "Law | IT",
   blurb:
-    "QUT Bachelor of Laws/IT (Hons) student majoring in Information Systems. Building AI and automation solutions for legal workflows and SMBs, with experience across Python, n8n, OpenAI agents, and privacy‑focused compliance tooling.",
+    "QUT Bachelor of Laws/IT (Honours) student majoring in Information Systems. Building AI and automation solutions for legal workflows and SMBs, with experience across Python, n8n, OpenAI agents, and privacy‑focused compliance tooling.",
   location: "Brisbane / Remote",
   avatar: "/personal_portfolio/headshot.png",
   resume: "/personal_portfolio/John_Wynter_Resume.pdf",
@@ -273,13 +273,6 @@ export default function Portfolio() {
                 <Mail className="h-4 w-4" /> Contact
               </a>
             </div>
-            <div className="mt-6 grid grid-cols-3 gap-3">
-              {['Python','JavaScript','React','n8n','OpenAI agents','WordPress'].map((sk) => (
-                <div key={sk} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-sm">
-                  {sk}
-                </div>
-              ))}
-            </div>
           </div>
           <div className="relative md:order-2">
             <Tilt>
@@ -297,6 +290,16 @@ export default function Portfolio() {
                     <p className="text-xl font-semibold">{DATA.name}</p>
                   </div>
                 </div>
+
+                {/* Skills moved under the greeting */}
+                <div className="mt-5 grid grid-cols-3 gap-3">
+                  {['Python','JavaScript','React','n8n','OpenAI agents','WordPress'].map((sk) => (
+                    <div key={sk} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-sm">
+                      {sk}
+                    </div>
+                  ))}
+                </div>
+
                 <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="text-sm text-neutral-400">Open to consulting • {DATA.location}</div>
                   <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
@@ -376,7 +379,7 @@ export default function Portfolio() {
                 org: "QUT Law, Innovation & Technology Society",
                 when: "2024 — Present",
                 bullets: [
-                  "Organised legal‑tech hackathons and AI workshops",
+                  "Organised legal‑tech events",
                   "Partnered with firms for student projects",
                 ],
               },
