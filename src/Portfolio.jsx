@@ -6,7 +6,7 @@ import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Fol
 
 const DATA = {
   name: "John Wynter",
-  role: "Bachelor of Laws / IT (Honours),
+  role: "Bachelor of Laws / IT (Honours)",
   blurb:
     "QUT Bachelor of Laws/IT (Hons) student majoring in Information Systems. Building AI and automation solutions for legal workflows and SMBs, with experience across Python, n8n, OpenAI agents, and privacy‑focused compliance tooling.",
   location: "Brisbane / Remote",
