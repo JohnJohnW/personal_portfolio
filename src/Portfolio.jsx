@@ -6,7 +6,7 @@ import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Fol
 
 const DATA = {
   name: "John Wynter",
-  role: "Bachelor of Laws / IT (Honours)",
+  role: "Bachelor of Laws / IT (Honours) • Major: Information Systems",
   blurb:
     "QUT Bachelor of Laws/IT (Hons) student majoring in Information Systems. Building AI and automation solutions for legal workflows and SMBs, with experience across Python, n8n, OpenAI agents, and privacy‑focused compliance tooling.",
   location: "Brisbane / Remote",
@@ -177,7 +177,9 @@ function Section({ id, title, icon: Icon, children, subtitle }) {
 }
 
 export default function Portfolio() {
+  // theme (locked to dark)
   useTheme();
+
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -267,13 +269,11 @@ export default function Portfolio() {
                 <Mail className="h-4 w-4" /> Contact
               </a>
             </div>
-            <div className="mt-6 flex gap-3">
-              {DATA.socials.map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noreferrer noopener" className="group" aria-label={s.label} title={s.label}>
-                  <div className="h-10 w-10 grid place-items-center rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl group-hover:bg-white/10 transition">
-                    <s.icon className="h-5 w-5" />
-                  </div>
-                </a>
+            <div className="mt-6 grid grid-cols-3 gap-3">
+              {['Python','JavaScript','React','n8n','OpenAI agents','WordPress'].map((sk) => (
+                <div key={sk} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-sm">
+                  {sk}
+                </div>
               ))}
             </div>
           </div>
@@ -292,13 +292,6 @@ export default function Portfolio() {
                     <p className="text-sm text-neutral-400">Hi, I’m</p>
                     <p className="text-xl font-semibold">{DATA.name}</p>
                   </div>
-                </div>
-                <div className="mt-5 grid grid-cols-3 gap-3">
-                  {['Python','TypeScript','React','FastAPI','n8n','OpenAI'].map((sk) => (
-                    <div key={sk} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-sm">
-                      {sk}
-                    </div>
-                  ))}
                 </div>
                 <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="text-sm text-neutral-400">Open to consulting • {DATA.location}</div>
