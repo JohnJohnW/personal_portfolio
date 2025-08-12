@@ -35,18 +35,18 @@ const DATA = {
       desc: "Static microsite for telecom-related compliance references/testing (demo).",
       links: [
         { href: "https://johnjohnw.github.io/telcom_compliance/", label: "Live" },
+        { href: "https://github.com/JohnJohnW/telcom_compliance", label: "Repo" },
       ],
       stack: ["React"],
     },
     {
-      title: "Personal Portfolio",
-      tag: "2025 • React + Framer Motion",
-      desc: "This site — animated, dark UI with GH Pages deployment and Web3Forms contact.",
+      title: "Cache to the Future",
+      tag: "2025 • Hackathon Project",
+      desc: "QUT Code Network Winter Hackathon 2025 winning team project — a digital time capsule that encrypts messages and provides time-based decryption keys, simulating the act of burying and unburying a time capsule, plus an in-site decryption tool.",
       links: [
-        { href: "https://johnjohnw.github.io/personal_portfolio/", label: "Live" },
-        { href: "https://github.com/JohnJohnW/personal_portfolio", label: "Repo" },
+        { href: "https://github.com/mrjwei/cache-to-the-future", label: "Repo" },
       ],
-      stack: ["React", "Framer Motion", "Tailwind"],
+      stack: ["React", "Crypto APIs", "JavaScript"],
     },
     {
       title: "Federal Court Judgement Analysis",
