@@ -22,7 +22,7 @@ const DATA = {
     {
       title: "Contract Clause Library",
       tag: "2025 • React",
-      desc: "Public, searchable library of reusable contract clauses (frontend).",
+      desc: "A fully responsive, searchable online library of reusable contract clauses, designed for lawyers and legal teams to quickly find and adapt pre‑built provisions. Built with React, featuring category filters, keyword search, and clean UI for efficient legal drafting.",
       links: [
         { href: "https://johnjohnw.github.io/contract_clause_library/", label: "Live" },
         { href: "https://github.com/JohnJohnW/contract_clause_library", label: "Repo" },
@@ -32,7 +32,7 @@ const DATA = {
     {
       title: "Telcom Compliance",
       tag: "2025 • React",
-      desc: "Static microsite for telecom-related compliance references/testing (demo).",
+      desc: "A static microsite providing telecom industry compliance resources and testing references. Designed as a lightweight, easily deployable resource hub, helping professionals access essential compliance data without complex navigation.",
       links: [
         { href: "https://johnjohnw.github.io/telcom_compliance/", label: "Live" },
         { href: "https://github.com/JohnJohnW/telcom_compliance", label: "Repo" },
@@ -42,7 +42,7 @@ const DATA = {
     {
       title: "Cache to the Future",
       tag: "2025 • Hackathon Project",
-      desc: "QUT Code Network Winter Hackathon 2025 winning team project — a digital time capsule that encrypts messages and provides time-based decryption keys, simulating the act of burying and unburying a time capsule, plus an in-site decryption tool.",
+      desc: "A QUT Code Network Winter Hackathon 2025 project — a secure, digital time capsule application that encrypts user‑submitted messages and releases time‑locked decryption keys based on chosen dates. Mimics the physical act of burying and unearthing a time capsule, and includes an integrated decryption tool for downloaded files.",
       links: [
         { href: "https://github.com/mrjwei/cache-to-the-future", label: "Repo" },
       ],
@@ -51,28 +51,28 @@ const DATA = {
     {
       title: "Federal Court Judgement Analysis",
       tag: "2025 • n8n + Agents",
-      desc: "Automated RSS ingestion and AI summaries of Federal Court judgements with routing to email and dashboards.",
+      desc: "An automated pipeline using n8n and AI agents to ingest daily RSS feeds of Federal Court judgements, summarise them with AI, and route results to targeted email recipients and analytical dashboards for legal teams.",
       links: [],
       stack: ["n8n", "OpenAI agents", "Python"],
     },
     {
       title: "QITC Contract Automation",
       tag: "2025 • Legal Ops",
-      desc: "End‑to‑end generation for QITC comprehensive contracts using VBA + Doxsera templates.",
+      desc: "A VBA + Doxsera‑driven solution for generating Queensland Information Technology Contract (QITC) documents end‑to‑end. Automates population of contract templates, reduces drafting time, and ensures compliance with QITC requirements.",
       links: [],
       stack: ["VBA", "Word / Doxsera"],
     },
     {
       title: "MIT WIL Project Leadership (QUT)",
       tag: "2024 • Team Lead",
-      desc: "Led Masters IT WIL project to auto‑generate ERDs for forensic legal investigations in Python.",
+      desc: "Led a Masters IT Work Integrated Learning (WIL) team project to automatically generate Entity‑Relationship Diagrams (ERDs) for forensic legal investigations using Python, enhancing efficiency in data mapping and evidence analysis.",
       links: [],
       stack: ["Python", "Graph", "Automation"],
     },
     {
       title: "Forensic Investigation Automation",
       tag: "2024 • Python",
-      desc: "Web‑scraping pipeline to track business activity/availability for legitimacy insights.",
+      desc: "Developed a Python‑based web scraping pipeline to track and log business activity/availability, providing actionable legitimacy insights for investigative purposes. Uses Requests and BeautifulSoup for robust and repeatable data extraction.",
       links: [],
       stack: ["Python", "Requests", "BeautifulSoup"],
     },
