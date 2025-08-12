@@ -380,7 +380,7 @@ export default function Portfolio() {
                 org: "QUT Law, Innovation & Technology Society",
                 when: "2024 — Present",
                 bullets: [
-                  "Organised legal-tech hackathons and AI workshops",
+                  "Organised events",
                   "Partnered with firms for student projects",
                 ],
               },
