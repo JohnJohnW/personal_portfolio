@@ -81,7 +81,7 @@ const DATA = {
 
 // Cross-bundler base path (works with Vite, CRA, GH Pages)
 const BASE =
-  (typeof import !== 'undefined' && typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL)
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL)
     ? import.meta.env.BASE_URL
     : (typeof process !== 'undefined' && process.env && process.env.PUBLIC_URL ? process.env.PUBLIC_URL + '/' : '/');
 
