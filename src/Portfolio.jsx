@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, Sun, Moon, ChevronRight, Folder, Cpu, Wand2, Download, Phone, Globe, PlaySquare } from "lucide-react";
+import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Folder, Cpu, Wand2, Download, Phone, Globe, PlaySquare } from "lucide-react";
 
 /* Liquid Glass portfolio — GH Pages + Web3Forms */
 
@@ -54,19 +54,6 @@ const DATA = {
 // Helper: convert channelId UC... -> uploads playlist UU...
 const uploadsPlaylist = (channelId) =>
   channelId && channelId.startsWith("UC") ? `UU${channelId.slice(2)}` : "";
-
-function useTheme() {
-  const [dark, setDark] = useState(() =>
-    typeof document !== "undefined"
-      ? document.documentElement.classList.contains("dark")
-      : true
-  );
-  useEffect(() => {
-    const root = document.documentElement;
-    dark ? root.classList.add("dark") : root.classList.remove("dark");
-  }, [dark]);
-  return { dark, setDark };
-}
 
 function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
@@ -151,7 +138,6 @@ function Section({ id, title, icon: Icon, children, subtitle }) {
 }
 
 export default function Portfolio() {
-  const { dark, setDark } = useTheme();
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -212,12 +198,7 @@ export default function Portfolio() {
                 </button>
               ))}
             </nav>
-            <div className="flex items-center gap-2">
-              <button onClick={() => setDark(!dark)}
-                className="h-9 w-9 grid place-items-center rounded-xl border border-white/20 bg-white/10 dark:bg-black/20 backdrop-blur-xl"
-                title="Toggle theme" aria-label="Toggle theme">
-                {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </button>
+            <div className="flex items-center">
               <a href="#contact" onClick={scrollTo("contact")}
                 className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 dark:bg-black/20 px-3 py-2 text-sm hover:bg-white/30 transition">
                 <Sparkles className="h-4 w-4" /> Work with me
