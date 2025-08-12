@@ -50,7 +50,6 @@ const DATA = {
   ],
 };
 
-// Helper: convert channelId UC... -> uploads playlist UU...
 const uploadsPlaylist = (channelId) =>
   channelId && channelId.startsWith("UC") ? `UU${channelId.slice(2)}` : "";
 
@@ -217,7 +216,7 @@ export default function Portfolio() {
         </div>
       </header>
 
-      {/* rest of component unchanged */}
+      {/* Remaining sections unchanged from previous full version */}
     </div>
   );
 }
