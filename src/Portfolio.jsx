@@ -1,7 +1,6 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, Sun, Moon, ChevronRight, Folder, Cpu, Wand2, Download, Phone, Globe, PlaySquare } from "lucide-react";
+import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Folder, Cpu, Wand2, Download, Phone, Globe, PlaySquare } from "lucide-react";
 
 /* Liquid Glass portfolio — GH Pages + Web3Forms */
 
@@ -9,7 +8,7 @@ const DATA = {
   name: "John Wynter",
   role: "Information Systems · Legal Tech · Automation",
   blurb:
-    "QUT IT (Hons) student building AI + automation for legal workflows and SMBs. Experience across Python, n8n, OpenAI agents, and privacy‑aware compliance tooling.",
+    "QUT IT (Hons) student building AI + automation for legal workflows and SMBs. Experience across Python, n8n, OpenAI agents, and privacy-aware compliance tooling.",
   location: "Brisbane / Remote",
   avatar: "/personal_portfolio/headshot.png",
   resume: "/personal_portfolio/John_Wynter_Resume.pdf",
@@ -30,21 +29,21 @@ const DATA = {
     {
       title: "QITC Contract Automation",
       tag: "2025 • Legal Ops",
-      desc: "End‑to‑end generation for QITC comprehensive contracts using VBA + Doxsera templates.",
+      desc: "End-to-end generation for QITC comprehensive contracts using VBA + Doxsera templates.",
       links: [{ href: "#", label: "Case Notes" }],
       stack: ["VBA", "Word / Doxsera"],
     },
     {
       title: "MIT WIL Project Leadership (QUT)",
       tag: "2024 • Team Lead",
-      desc: "Led Masters IT WIL project to auto‑generate ERDs for forensic legal investigations in Python.",
-      links: [{ href: "#", label: "Write‑up" }],
+      desc: "Led Masters IT WIL project to auto-generate ERDs for forensic legal investigations in Python.",
+      links: [{ href: "#", label: "Write-up" }],
       stack: ["Python", "Graph", "Automation"],
     },
     {
       title: "Forensic Investigation Automation",
       tag: "2024 • Python",
-      desc: "Web‑scraping pipeline to track business activity/availability for legitimacy insights.",
+      desc: "Web-scraping pipeline to track business activity/availability for legitimacy insights.",
       links: [{ href: "#", label: "Repo" }],
       stack: ["Python", "Requests", "BeautifulSoup"],
     },
@@ -54,19 +53,6 @@ const DATA = {
 // Helper: convert channelId UC... -> uploads playlist UU...
 const uploadsPlaylist = (channelId) =>
   channelId && channelId.startsWith("UC") ? `UU${channelId.slice(2)}` : "";
-
-function useTheme() {
-  const [dark, setDark] = useState(() =>
-    typeof document !== "undefined"
-      ? document.documentElement.classList.contains("dark")
-      : true
-  );
-  useEffect(() => {
-    const root = document.documentElement;
-    dark ? root.classList.add("dark") : root.classList.remove("dark");
-  }, [dark]);
-  return { dark, setDark };
-}
 
 function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
@@ -151,7 +137,6 @@ function Section({ id, title, icon: Icon, children, subtitle }) {
 }
 
 export default function Portfolio() {
-  const { dark, setDark } = useTheme();
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -213,11 +198,7 @@ export default function Portfolio() {
               ))}
             </nav>
             <div className="flex items-center gap-2">
-              <button onClick={() => setDark(!dark)}
-                className="h-9 w-9 grid place-items-center rounded-xl border border-white/20 bg-white/10 dark:bg-black/20 backdrop-blur-xl"
-                title="Toggle theme" aria-label="Toggle theme">
-                {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </button>
+              {/* Theme toggle removed to force light mode */}
               <a href="#contact" onClick={scrollTo("contact")}
                 className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 dark:bg-black/20 px-3 py-2 text-sm hover:bg-white/30 transition">
                 <Sparkles className="h-4 w-4" /> Work with me
@@ -232,7 +213,7 @@ export default function Portfolio() {
           <div>
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">
-              Liquid‑glass <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-sky-400">portfolio</span>
+              Liquid-glass <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-sky-400">portfolio</span>
               <br /> for modern builders
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
@@ -359,7 +340,7 @@ export default function Portfolio() {
                 org: "QUT Law, Innovation & Technology Society",
                 when: "2024 — Present",
                 bullets: [
-                  "Organised legal‑tech hackathons and AI workshops",
+                  "Organised legal-tech hackathons and AI workshops",
                   "Partnered with firms for student projects",
                 ],
               },
@@ -389,7 +370,7 @@ export default function Portfolio() {
           <div className="relative z-10 grid md:grid-cols-2 gap-6 items-center">
             <div>
               <h3 className="text-xl font-semibold">Let’s build something audacious.</h3>
-              <p className="mt-2 text-sm text-neutral-100/90">From prototypes to production. Privacy‑first, automation‑heavy, and elegantly engineered.</p>
+              <p className="mt-2 text-sm text-neutral-100/90">From prototypes to production. Privacy-first, automation-heavy, and elegantly engineered.</p>
             </div>
             <div className="flex md:justify-end gap-3">
               <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-white/90 text-neutral-900 px-4 py-2 hover:bg-white">
