@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowRight, Rocket, Sparkles, ChevronRight, Folder, Cpu, Wand2, Phone, PlaySquare, Youtube } from "lucide-react";
 
-/* Personal portfolio — GH Pages + Web3Forms */
+/* Personal portfolio - GH Pages + Web3Forms */
 
 const DATA = {
   name: "John Wynter",
@@ -11,12 +10,22 @@ const DATA = {
   location: "Brisbane | Qld | Aus",
   avatar: "/personal_portfolio/headshot.png",
   socials: [
-    { icon: Github, label: "GitHub", href: "https://github.com/JohnJohnW" },
-    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/john-wynter/" },
-    { icon: Mail, label: "Email", href: "mailto:johnwynter55893@outlook.com" },
-    { icon: Youtube, label: "YouTube", href: "https://www.youtube.com/@john_wynter" },
+    { label: "GitHub",   href: "https://github.com/JohnJohnW" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/john-wynter/" },
+    { label: "Email",    href: "mailto:johnwynter55893@outlook.com" },
+    { label: "YouTube",  href: "https://www.youtube.com/@john_wynter" },
   ],
   projects: [
+    {
+      title: "Audit Trail",
+      tag: "2026",
+      desc: "SaaS compliance automation platform that maps GitHub repository activity to audit-ready evidence across 8 major frameworks including ISO 27001, SOC 2, GDPR, NIST CSF, and PCI DSS. Connects via GitHub OAuth (read-only metadata only), scores 63 controls automatically, and provides a live gap analysis dashboard, continuous monitoring alerts, and a shareable auditor portal with PDF/CSV export.",
+      links: [
+        { href: "https://audittrail-dev.vercel.app/", label: "Live" },
+        { href: "https://github.com/JohnJohnW/audittrail-dev", label: "Repo" },
+      ],
+      stack: [],
+    },
     {
       title: "Evidencia",
       tag: "2025",
@@ -121,7 +130,6 @@ const DATA = {
       stack: ["React"],
     },
   ].sort((a, b) => {
-    // Sort by year (descending - newest first)
     const yearA = parseInt(a.tag);
     const yearB = parseInt(b.tag);
     return yearB - yearA;
@@ -142,16 +150,10 @@ function useTheme() {
   // Force dark theme always
   useEffect(() => {
     const root = document.documentElement;
-    // Remove any existing theme classes
     root.classList.remove("light");
     root.classList.remove("auto");
-    // Force dark theme
     root.classList.add("dark");
-    
-    // Also set data attribute to ensure dark mode
     root.setAttribute("data-theme", "dark");
-    
-    // Prevent any theme switching
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -163,15 +165,12 @@ function useTheme() {
         }
       });
     });
-    
     observer.observe(root, { attributes: true, attributeFilter: ['class'] });
-    
     return () => {
       observer.disconnect();
       root.classList.remove("dark");
     };
   }, []);
-  
   return { dark: true };
 }
 
@@ -189,34 +188,18 @@ function Spotlight() {
     return () => window.removeEventListener("pointermove", move);
   }, []);
   return <div aria-hidden className="pointer-events-none fixed inset-0 z-0" style={{ background:
-    "radial-gradient(600px at var(--spot-x, 50%) var(--spot-y, 50%), rgba(99,102,241,0.25), transparent 60%)"}}/>;
+    "radial-gradient(600px at var(--spot-x, 50%) var(--spot-y, 50%), rgba(29,78,216,0.25), transparent 60%)"}}/>;
 }
 
 function LiquidBlobs() {
   return (
     <div className="fixed -z-10 inset-0 overflow-hidden">
-      <div className="absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-fuchsia-500/40 via-indigo-500/30 to-blue-500/30 blur-3xl opacity-70 mix-blend-screen animate-pulse" />
-      <div className="absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr from-cyan-400/30 via-sky-500/30 to-indigo-600/30 blur-3xl opacity-70 mix-blend-screen animate-pulse" />
+      <div className="absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-blue-800/40 via-blue-700/30 to-blue-900/30 blur-3xl opacity-70 mix-blend-screen animate-pulse" />
+      <div className="absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr from-blue-600/30 via-blue-800/30 to-blue-900/30 blur-3xl opacity-70 mix-blend-screen animate-pulse" />
     </div>
   );
 }
 
-function Dock({ items }) {
-  const [hovered, setHovered] = useState(null);
-  return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="backdrop-blur-xl bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/10 shadow-2xl rounded-2xl px-3 py-2 flex gap-2">
-        {items.map((it, i) => (
-          <button key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)} onClick={it.onClick}
-            className="relative grid place-items-center aspect-square h-11 rounded-xl transition-all"
-            style={{ transform: hovered === i ? "scale(1.15)" : "scale(1)" }} aria-label={it.label} title={it.label}>
-            <it.icon className="h-5 w-5" />
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function Tilt({ children }) {
   const ref = useRef(null);
@@ -284,16 +267,16 @@ export default function Portfolio() {
         body: payload.toString()
       });
       if (!res.ok) throw new Error("web3forms failed");
-      setToast("Thanks! I’ll reply soon.");
+      setToast("Thanks! I'll reply soon.");
     } catch (err) {
-      setToast("Couldn’t send right now—try email?");
+      setToast("Couldn't send right now-try email?");
     } finally {
       setTimeout(() => setToast(null), 2600);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(1200px_800px_at_20%_-10%,rgba(59,130,246,.2),transparent),radial-gradient(1200px_800px_at_80%_110%,rgba(236,72,153,.15),transparent)] text-neutral-100 selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-[radial-gradient(1200px_800px_at_20%_-10%,rgba(30,58,138,.25),transparent),radial-gradient(1200px_800px_at_80%_110%,rgba(29,78,216,.15),transparent)] text-neutral-100 selection:bg-blue-700/30">
       <LiquidBlobs />
       <Spotlight />
 
@@ -301,28 +284,26 @@ export default function Portfolio() {
         <div className="backdrop-blur-xl bg-black/20 border border-white/10 shadow-lg rounded-2xl">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
-              <img src={`${BASE}apple-touch-icon.png`} alt="Site icon" className="h-8 w-8 rounded-xl object-cover" />
               <span className="font-semibold tracking-tight">{DATA.name}</span>
             </div>
             <nav className="hidden sm:flex items-center gap-1">
               {[
-                { id: "home", label: "Home" },
-                { id: "projects", label: "Projects" },
-                { id: "videos", label: "Videos" },
+                { id: "home",       label: "Home"       },
+                { id: "projects",   label: "Projects"   },
+                { id: "videos",     label: "Videos"     },
                 { id: "experience", label: "Experience" },
-                { id: "education", label: "Education" },
+                { id: "education",  label: "Education"  },
               ].map((t) => (
                 <button key={t.id} onClick={scrollTo(t.id)}
                   className={cn("px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition",
-                    active === t.id && "bg-white/10")}
-                >
+                    active === t.id && "bg-white/10")}>
                   {t.label}
                 </button>
               ))}
             </nav>
             <div className="flex items-center gap-2">
               <a href="#contact" onClick={scrollTo("contact")} className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10 transition">
-                <Sparkles className="h-4 w-4" /> Contact
+                Contact
               </a>
             </div>
           </div>
@@ -336,15 +317,15 @@ export default function Portfolio() {
               className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">
               {DATA.name}
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-sky-400">{DATA.role}</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-400 to-blue-600">{DATA.role}</span>
             </motion.h1>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="#projects" onClick={scrollTo("projects")} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-xl hover:bg-white/10 transition">
-                <Rocket className="h-4 w-4" /> Explore projects
+                Explore projects
               </a>
-              <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-indigo-500 via-fuchsia-500 to-sky-500 px-4 py-2 text-white shadow-lg hover:opacity-90 transition">
-                <Mail className="h-4 w-4" /> Contact
+              <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-blue-500 px-4 py-2 text-white shadow-lg hover:opacity-90 transition">
+                Contact
               </a>
             </div>
           </div>
@@ -355,21 +336,19 @@ export default function Portfolio() {
                 style={{ transformStyle: "preserve-3d" }}>
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-sky-500">
+                  <div className="h-12 w-12 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500">
                     <img src={DATA.avatar} alt="John Wynter headshot" className="h-full w-full object-cover"
-                      onError={(e)=>{ e.currentTarget.style.display='none'; }} />
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   </div>
                   <div>
-                    <p className="text-sm text-neutral-400">Hi, I’m</p>
+                    <p className="text-sm text-neutral-400">Hi, I'm</p>
                     <p className="text-xl font-semibold">{DATA.name}</p>
                   </div>
                 </div>
-
-                {/* Location row */}
                 <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="text-sm text-neutral-400">{DATA.location}</div>
                   <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
-                    Get in touch <ArrowRight className="h-4 w-4" />
+                    Get in touch
                   </a>
                 </div>
               </motion.div>
@@ -378,7 +357,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      <Section id="projects" title="Projects" icon={Folder} className="!pt-4 !pb-16">
+      <Section id="projects" title="Projects" className="!pt-4 !pb-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {DATA.projects.map((p, i) => (
             <motion.article key={p.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: i * 0.03 }}
@@ -396,11 +375,11 @@ export default function Portfolio() {
               <div className="mt-4 flex gap-3">
                 {p.links.map((l) => (
                   <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-1 hover:underline">
-                    {l.label} <ChevronRight className="h-3.5 w-3.5" />
+                    {l.label}
                   </a>
                 ))}
               </div>
-              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(99,102,241,.25), rgba(236,72,153,.25), rgba(14,165,233,.25), rgba(99,102,241,.25))" }} />
+              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(29,78,216,.3), rgba(30,58,138,.3), rgba(59,130,246,.25), rgba(29,78,216,.3))" }} />
             </motion.article>
           ))}
         </div>
@@ -408,7 +387,7 @@ export default function Portfolio() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.5 }}
-          className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-tr from-indigo-500/20 via-fuchsia-500/20 to-sky-500/20 backdrop-blur-xl p-6">
+          className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-tr from-blue-900/40 via-blue-800/20 to-blue-900/40 backdrop-blur-xl p-6">
           <div className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-60"
                style={{ background: "url('data:image/svg+xml;utf8, %3Csvg width=\\\"60\\\" height=\\\"60\\\" viewBox=\\\"0 0 60 60\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\"%3E%3Cg fill=\\\"none\\\" stroke=\\\"white\\\" stroke-opacity=\\\"0.06\\\"%3E%3Cpath d=\\\"M0 30h60M30 0v60\\\"/%3E%3C/g%3E%3C/svg%3E')"}} />
           <div className="relative z-10 grid md:grid-cols-2 gap-6 items-center">
@@ -417,14 +396,14 @@ export default function Portfolio() {
             </div>
             <div className="flex md:justify-end gap-3">
               <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-white/90 text-neutral-900 px-4 py-2 hover:bg-white">
-                <Wand2 className="h-4 w-4"/> Contact me
+                Contact me
               </a>
             </div>
           </div>
         </motion.div>
       </div>
 
-      <Section id="videos" title="Videos" icon={PlaySquare} className="!pt-4">
+      <Section id="videos" title="Videos" className="!pt-4">
         <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl">
           <div className="aspect-video w-full">
             <iframe
@@ -439,108 +418,139 @@ export default function Portfolio() {
         </div>
         <div className="mt-6 flex justify-end">
           <a href="https://www.youtube.com/@john_wynter" target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-xl hover:bg-white/10">
-            <Youtube className="h-4 w-4"/> View channel <ChevronRight className="h-3.5 w-3.5" />
+            View channel
           </a>
         </div>
       </Section>
 
-      <Section id="experience" title="Experience" icon={Cpu} className="!pt-4">
+      <Section id="experience" title="Experience" className="!pt-4">
         <div className="relative pl-8 overflow-visible">
           {/* Gradient timeline line */}
-          <motion.div 
+          <motion.div
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{ originY: 0 }}
-            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-indigo-500/80 via-fuchsia-500/50 to-sky-500/20" 
+            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-blue-500/80 via-blue-700/50 to-blue-900/20"
           />
           <ul className="space-y-4">
-            {/* Active roles */}
-            {[
-              { role: "Software Engineer Intern", org: "Tanda", when: "Dec 2025 — Present", active: true },
-              { role: "General Executive", org: "QUT Cyber Security Club", when: "Oct 2025 — Present", active: true },
-            ].map((item, i) => (
-              <li key={i} className="relative pl-0 group">
-                {/* Dot - always visible */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.3, delay: i * 0.1 }}
-                  whileHover={{ scale: 1.2 }}
-                  className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-indigo-400 via-fuchsia-500 to-sky-400 z-10 transition-transform duration-200" 
-                />
-                {/* Card */}
-                <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
-                  <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <div>
-                      <p className="font-semibold text-white/95">{item.role}</p>
-                      <p className="text-sm text-white/50">{item.org}</p>
-                    </div>
-                    <span className="text-xs font-medium text-indigo-300 bg-indigo-500/[0.15] px-3 py-1.5 rounded-full w-fit border border-indigo-400/20">{item.when}</span>
-                  </div>
-                </div>
-              </li>
-            ))}
 
-            {/* Grouped roles - QUT Law, Innovation & Technology Society */}
+            {/* QUT GRC - active */}
             <li className="relative pl-0 group">
-              {/* Dot - vertically centered */}
-              <motion.div 
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.3, delay: 0 }}
+                whileHover={{ scale: 1.2 }}
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
+              />
+              <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
+                <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <p className="font-semibold text-white/95">Information Security (Governance, Risk and Compliance) Associate</p>
+                    <p className="text-sm text-white/50">Queensland University of Technology</p>
+                  </div>
+                  <span className="text-xs font-medium text-blue-300 bg-blue-700/[0.2] px-3 py-1.5 rounded-full w-fit border border-blue-500/30">Mar 2026 - Present</span>
+                </div>
+              </div>
+            </li>
+
+            {/* QUT Cyber - active */}
+            <li className="relative pl-0 group">
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.3, delay: 0.05 }}
+                whileHover={{ scale: 1.2 }}
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
+              />
+              <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
+                <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <p className="font-semibold text-white/95">General Executive</p>
+                    <p className="text-sm text-white/50">QUT Cyber Security Club</p>
+                  </div>
+                  <span className="text-xs font-medium text-blue-300 bg-blue-700/[0.2] px-3 py-1.5 rounded-full w-fit border border-blue-500/30">Oct 2025 - Present</span>
+                </div>
+              </div>
+            </li>
+
+            {/* QUT LITS - grouped */}
+            <li className="relative pl-0 group">
+              <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-indigo-400 via-fuchsia-500 to-sky-400 z-10 transition-transform duration-200" 
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
               />
-              {/* Card */}
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
                 <p className="relative font-semibold text-white/95 mb-4">QUT Law, Innovation & Technology Society</p>
                 <div className="relative ml-2 pl-5 space-y-3">
                   {/* Inner timeline */}
-                  <motion.div 
+                  <motion.div
                     initial={{ scaleY: 0 }}
                     whileInView={{ scaleY: 1 }}
                     viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.4, delay: 0.25 }}
+                    transition={{ duration: 0.4, delay: 0.15 }}
                     style={{ originY: 0 }}
-                    className="absolute left-0 top-1 bottom-1 w-0.5 bg-gradient-to-b from-indigo-500/70 to-indigo-500/10 rounded-full" 
+                    className="absolute left-0 top-1 bottom-1 w-0.5 bg-gradient-to-b from-blue-500/70 to-blue-500/10 rounded-full"
                   />
-                  {/* Secretary - Active */}
+                  {/* Vice President - active */}
                   <div className="relative group">
-                    <motion.div 
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      transition={{ duration: 0.3, delay: 0.2 }}
+                      whileHover={{ scale: 1.3 }}
+                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 transition-transform duration-200"
+                    />
+                    <div className="pl-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                        <p className="text-sm font-medium text-white/90">Vice President</p>
+                        <span className="text-xs text-blue-300 bg-blue-700/[0.2] px-2.5 py-1 rounded-full w-fit border border-blue-500/30">Feb 2026 - Present</span>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Secretary - past */}
+                  <div className="relative group">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      transition={{ duration: 0.3, delay: 0.25 }}
+                      whileHover={{ scale: 1.3 }}
+                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 transition-transform duration-200"
+                    />
+                    <div className="pl-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                        <p className="text-sm font-medium text-white/50">Secretary</p>
+                        <span className="text-xs text-white/40 bg-white/[0.06] px-2.5 py-1 rounded-full w-fit border border-white/10">Oct 2025 - Feb 2026</span>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Industry Coordinator - past */}
+                  <div className="relative group">
+                    <motion.div
                       initial={{ opacity: 0, scale: 0 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ duration: 0.3, delay: 0.3 }}
                       whileHover={{ scale: 1.3 }}
-                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 transition-transform duration-200" 
-                    />
-                    <div className="pl-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                        <p className="text-sm font-medium text-white/90">Secretary</p>
-                        <span className="text-xs text-indigo-300 bg-indigo-500/[0.15] px-2.5 py-1 rounded-full w-fit border border-indigo-400/20">Oct 2025 — Present</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Industry Coordinator - Past */}
-                  <div className="relative group">
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.3, delay: 0.4 }}
-                      whileHover={{ scale: 1.3 }}
-                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 transition-transform duration-200" 
+                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 transition-transform duration-200"
                     />
                     <div className="pl-4">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                         <p className="text-sm font-medium text-white/50">Industry Coordinator</p>
-                        <span className="text-xs text-white/40 bg-white/[0.06] px-2.5 py-1 rounded-full w-fit border border-white/10">Jul 2025 — Oct 2025</span>
+                        <span className="text-xs text-white/40 bg-white/[0.06] px-2.5 py-1 rounded-full w-fit border border-white/10">Jul 2025 - Oct 2025</span>
                       </div>
                     </div>
                   </div>
@@ -548,42 +558,60 @@ export default function Portfolio() {
               </div>
             </li>
 
-            {/* Active role - Administrative Assistant */}
+            {/* Tanda - past */}
             <li className="relative pl-0 group">
-              {/* Dot */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
+                transition={{ duration: 0.3, delay: 0.15 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-indigo-400 via-fuchsia-500 to-sky-400 z-10 transition-transform duration-200" 
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
               />
-              {/* Card */}
-              <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
+              <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-3xl pointer-events-none" />
                 <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div>
-                    <p className="font-semibold text-white/95">Administrative Assistant</p>
-                    <p className="text-sm text-white/50">Dundas Lawyers</p>
+                    <p className="font-semibold text-white/70">Software Engineer Intern</p>
+                    <p className="text-sm text-white/40">Tanda</p>
                   </div>
-                  <span className="text-xs font-medium text-indigo-300 bg-indigo-500/[0.15] px-3 py-1.5 rounded-full w-fit border border-indigo-400/20">Mar 2024 — Present</span>
+                  <span className="text-xs font-medium text-white/40 bg-white/[0.06] px-3 py-1.5 rounded-full w-fit border border-white/10">Dec 2025 - Jan 2026</span>
                 </div>
               </div>
             </li>
 
-            {/* Past role - Marketing Officer */}
+            {/* Dundas Lawyers - past */}
             <li className="relative pl-0 group">
-              {/* Dot */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: 0.4 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200" 
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
               />
-              {/* Card */}
+              <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-3xl pointer-events-none" />
+                <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <p className="font-semibold text-white/70">Legal Administrative Assistant</p>
+                    <p className="text-sm text-white/40">Dundas Lawyers</p>
+                  </div>
+                  <span className="text-xs font-medium text-white/40 bg-white/[0.06] px-3 py-1.5 rounded-full w-fit border border-white/10">Mar 2024 - Mar 2026</span>
+                </div>
+              </div>
+            </li>
+
+            {/* Marketing Officer - past */}
+            <li className="relative pl-0 group">
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.3, delay: 0.25 }}
+                whileHover={{ scale: 1.2 }}
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
+              />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-3xl pointer-events-none" />
                 <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -591,24 +619,25 @@ export default function Portfolio() {
                     <p className="font-semibold text-white/70">Marketing Officer</p>
                     <p className="text-sm text-white/40">QUT AI & ML Society</p>
                   </div>
-                  <span className="text-xs font-medium text-white/40 bg-white/[0.06] px-3 py-1.5 rounded-full w-fit border border-white/10">Aug 2025 — Oct 2025</span>
+                  <span className="text-xs font-medium text-white/40 bg-white/[0.06] px-3 py-1.5 rounded-full w-fit border border-white/10">Aug 2025 - Oct 2025</span>
                 </div>
               </div>
             </li>
+
           </ul>
         </div>
       </Section>
 
-      <Section id="education" title="Education" icon={Wand2} className="!pt-4">
+      <Section id="education" title="Education" className="!pt-4">
         <div className="relative pl-8 overflow-visible">
           {/* Gradient timeline line */}
-          <motion.div 
+          <motion.div
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{ originY: 0 }}
-            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-sky-500/80 via-indigo-500/50 to-fuchsia-500/20" 
+            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-blue-500/80 via-blue-700/50 to-blue-900/20"
           />
           <ul className="space-y-4">
             {[
@@ -624,16 +653,14 @@ export default function Portfolio() {
               },
             ].map((e, i) => (
               <li key={i} className="relative pl-0 group">
-                {/* Dot - always visible, vertically centered */}
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.3, delay: i * 0.1 }}
                   whileHover={{ scale: 1.2 }}
-                  className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-sky-400 via-indigo-500 to-fuchsia-400 z-10 transition-transform duration-200" 
+                  className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
                 />
-                {/* Card */}
                 <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
                   <div className="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
@@ -641,7 +668,7 @@ export default function Portfolio() {
                       <p className="font-semibold text-white/95">{e.degree}</p>
                       <p className="text-sm text-white/50 mt-1">{e.uni}</p>
                     </div>
-                    <span className="text-xs font-medium text-sky-300 bg-sky-500/[0.15] px-3 py-1.5 rounded-full w-fit whitespace-nowrap border border-sky-400/20">{e.when}</span>
+                    <span className="text-xs font-medium text-blue-300 bg-blue-700/[0.2] px-3 py-1.5 rounded-full w-fit whitespace-nowrap border border-blue-500/30">{e.when}</span>
                   </div>
                 </div>
               </li>
@@ -650,32 +677,29 @@ export default function Portfolio() {
         </div>
       </Section>
 
-      <Section id="contact" title="Contact" icon={Phone} className="!pt-4">
+      <Section id="contact" title="Contact" className="!pt-4">
         <motion.form initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }}
           onSubmit={onSubmit}
           className="max-w-2xl mx-auto rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8">
           <div className="grid gap-6">
             <div className="grid gap-3">
               <label className="text-sm font-medium">Name
-                <input name="name" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition-all" />
+                <input name="name" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
               </label>
             </div>
-            
             <div className="grid gap-3">
               <label className="text-sm font-medium">Email
-                <input name="email" type="email" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition-all" />
+                <input name="email" type="email" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
               </label>
             </div>
-            
             <div className="grid gap-3">
               <label className="text-sm font-medium">Message
-                <textarea name="message" rows={6} className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none" placeholder="Your message..." />
+                <textarea name="message" rows={6} className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 transition-all resize-none" placeholder="Your message..." />
               </label>
             </div>
-            
             <div className="flex justify-end pt-2">
-              <button className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-indigo-500 via-fuchsia-500 to-sky-500 px-6 py-3 text-white shadow-lg hover:opacity-90 transition-all">
-                <Rocket className="h-4 w-4"/> Send Message
+              <button className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-blue-500 px-6 py-3 text-white shadow-lg hover:opacity-90 transition-all">
+                Send Message
               </button>
             </div>
           </div>
@@ -694,24 +718,16 @@ export default function Portfolio() {
       <footer className="relative z-10 border-t border-white/10 mt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-sm text-neutral-400 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span>© {new Date().getFullYear()} {DATA.name}. All rights reserved.</span>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             {DATA.socials.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label={s.label}>
-                <s.icon className="h-5 w-5" />
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-xs uppercase tracking-wide">
+                {s.label}
               </a>
             ))}
           </div>
         </div>
       </footer>
 
-      <Dock items={[
-        { icon: Sparkles, label: "Home", onClick: scrollTo("home") },
-        { icon: Folder, label: "Projects", onClick: scrollTo("projects") },
-        { icon: PlaySquare, label: "Videos", onClick: scrollTo("videos") },
-        { icon: Cpu, label: "Experience", onClick: scrollTo("experience") },
-        { icon: Wand2, label: "Education", onClick: scrollTo("education") },
-        { icon: Phone, label: "Contact", onClick: scrollTo("contact") },
-      ]} />
     </div>
   );
 }
