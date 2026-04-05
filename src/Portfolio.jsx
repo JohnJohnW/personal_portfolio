@@ -192,7 +192,68 @@ function useTheme() {
 
 function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
+function useGitHubStreak(username) {
+  const [streak, setStreak] = useState(null)
+  useEffect(() => {
+    fetch(`https://api.github.com/users/${username}/events/public?per_page=100`)
+      .then(r => r.ok ? r.json() : [])
+      .then(events => {
+        const pushDates = new Set()
+        events.forEach(e => {
+          if (e.type === "PushEvent") pushDates.add(e.created_at.slice(0, 10))
+        })
+        let count = 0
+        const d = new Date()
+        while (true) {
+          const key = d.toISOString().slice(0, 10)
+          if (pushDates.has(key)) {
+            count++
+            d.setDate(d.getDate() - 1)
+          } else if (count === 0) {
+            d.setDate(d.getDate() - 1)
+            if (pushDates.has(d.toISOString().slice(0, 10))) {
+              count++
+              d.setDate(d.getDate() - 1)
+            } else break
+          } else break
+        }
+        if (count > 0) setStreak(count)
+      })
+      .catch(() => {})
+  }, [username])
+  return streak
+}
+
+function getTimeColors() {
+  const hour = new Date().getHours()
+  if (hour >= 6 && hour < 12) {
+    return {
+      blobA: "from-blue-800/40 via-blue-700/30 to-blue-900/30",
+      blobB: "from-blue-600/30 via-blue-800/30 to-blue-900/30",
+      spot: "rgba(29,78,216,0.25)",
+    }
+  } else if (hour >= 12 && hour < 17) {
+    return {
+      blobA: "from-indigo-800/40 via-blue-700/30 to-indigo-900/30",
+      blobB: "from-blue-600/30 via-indigo-700/30 to-indigo-900/30",
+      spot: "rgba(67,56,202,0.25)",
+    }
+  } else if (hour >= 17 && hour < 21) {
+    return {
+      blobA: "from-purple-800/40 via-indigo-700/30 to-purple-900/30",
+      blobB: "from-indigo-600/30 via-purple-800/30 to-purple-900/30",
+      spot: "rgba(124,58,237,0.25)",
+    }
+  }
+  return {
+    blobA: "from-amber-900/30 via-orange-800/20 to-red-900/20",
+    blobB: "from-orange-800/20 via-amber-900/20 to-red-900/20",
+    spot: "rgba(180,83,9,0.2)",
+  }
+}
+
 function Spotlight() {
+  const { spot } = getTimeColors()
   useEffect(() => {
     const root = document.documentElement;
     const move = (e) => {
@@ -204,16 +265,17 @@ function Spotlight() {
     return () => window.removeEventListener("pointermove", move);
   }, []);
   return <div aria-hidden className="pointer-events-none fixed inset-0 z-0" style={{ background:
-    "radial-gradient(600px at var(--spot-x, 50%) var(--spot-y, 50%), rgba(29,78,216,0.25), transparent 60%)"}}/>;
+    `radial-gradient(600px at var(--spot-x, 50%) var(--spot-y, 50%), ${spot}, transparent 60%)`}}/>;
 }
 
 function LiquidBlobs() {
+  const { blobA, blobB } = getTimeColors()
   return (
     <div className="fixed -z-10 inset-0 overflow-hidden">
-      <div className="absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-blue-800/40 via-blue-700/30 to-blue-900/30 blur-3xl opacity-70 mix-blend-screen animate-pulse" />
-      <div className="absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr from-blue-600/30 via-blue-800/30 to-blue-900/30 blur-3xl opacity-70 mix-blend-screen animate-pulse" />
+      <div className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-70 mix-blend-screen animate-pulse`} />
+      <div className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-70 mix-blend-screen animate-pulse`} />
     </div>
-  );
+  )
 }
 
 
@@ -258,6 +320,7 @@ function Section({ id, title, icon: Icon, children, subtitle, className = "" }) 
 
 export default function Portfolio() {
   useTheme();
+  const streak = useGitHubStreak("JohnJohnW")
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -361,7 +424,15 @@ export default function Portfolio() {
                   </div>
                 </div>
                 <div className="mt-5 flex items-center justify-between gap-3">
-                  <div className="text-sm text-neutral-400">{DATA.location}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-sm text-neutral-400">{DATA.location}</div>
+                    {streak && (
+                      <div className="flex items-center gap-1.5 text-sm text-emerald-400">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        {streak}-day streak
+                      </div>
+                    )}
+                  </div>
                   <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
                     Get in touch
                   </a>
@@ -374,29 +445,44 @@ export default function Portfolio() {
 
       <Section id="projects" title="Projects" className="!pt-4 !pb-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {DATA.projects.map((p, i) => (
-            <motion.article key={p.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: i * 0.03 }}
-              className="relative group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 hover:border-white/20 hover:shadow-xl transition">
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="font-semibold">{p.title}</h3>
-                <span className="text-xs text-neutral-400">{p.tag}</span>
-              </div>
-              <p className="mt-2 text-sm/6 text-neutral-200/90">{p.desc}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {p.stack.map((s) => (
-                  <span key={s} className="text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1">{s}</span>
-                ))}
-              </div>
-              <div className="mt-4 flex gap-3">
-                {p.links.map((l) => (
-                  <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-1 hover:underline">
-                    {l.label}
-                  </a>
-                ))}
-              </div>
-              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(29,78,216,.3), rgba(30,58,138,.3), rgba(59,130,246,.25), rgba(29,78,216,.3))" }} />
-            </motion.article>
-          ))}
+          {DATA.projects.map((p, i) => {
+            const liveLink = p.links.find(l => l.label === "Live")
+            const liveUrl = liveLink ? liveLink.href : null
+            return (
+              <motion.article key={p.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: i * 0.03 }}
+                className="relative group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 hover:border-white/20 hover:shadow-xl transition overflow-hidden">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-semibold">{p.title}</h3>
+                    <span className="text-xs text-neutral-400">{p.tag}</span>
+                  </div>
+                  <p className="mt-2 text-sm/6 text-neutral-200/90">{p.desc}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {p.stack.map((s) => (
+                      <span key={s} className="text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1">{s}</span>
+                    ))}
+                  </div>
+                  <div className="mt-4 flex gap-3">
+                    {p.links.map((l) => (
+                      <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-1 hover:underline">
+                        {l.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+                {liveUrl ? (
+                  <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 overflow-hidden">
+                    <iframe src={liveUrl} className="border-0 origin-top-left scale-[0.25]"
+                      style={{ width: "400%", height: "400%", pointerEvents: "none" }}
+                      loading="lazy" tabIndex={-1} title={`${p.title} preview`} />
+                    <div className="absolute inset-0 bg-black/50" />
+                  </div>
+                ) : (
+                  <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(29,78,216,.3), rgba(30,58,138,.3), rgba(59,130,246,.25), rgba(29,78,216,.3))" }} />
+                )}
+              </motion.article>
+            )
+          })}
         </div>
       </Section>
 
