@@ -368,7 +368,7 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen text-neutral-100 selection:bg-blue-700/30" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
+    <div className="min-h-screen text-neutral-100 selection:bg-white/20" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
       <LiquidBlobs />
       <Spotlight />
 
@@ -470,7 +470,7 @@ export default function Portfolio() {
                   </a>
                 ))}
               </div>
-              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(29,78,216,.3), rgba(30,58,138,.3), rgba(59,130,246,.25), rgba(29,78,216,.3))" }} />
+              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: `conic-gradient(from 180deg at 50% 50%, color-mix(in srgb, var(--accent-deep) 30%, transparent), color-mix(in srgb, var(--accent-dark) 30%, transparent), color-mix(in srgb, var(--accent-mid) 25%, transparent), color-mix(in srgb, var(--accent-deep) 30%, transparent))` }} />
             </motion.article>
           ))}
         </div>
