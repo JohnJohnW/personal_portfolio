@@ -194,33 +194,63 @@ function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
 function getTimeColors() {
   const hour = new Date().getHours()
-  if (hour >= 6 && hour < 12) {
+
+  // Dawn (5-7am): rose and gold, sunrise warmth
+  if (hour >= 5 && hour < 7) {
     return {
-      blobA: "from-blue-800/40 via-blue-700/30 to-blue-900/30",
-      blobB: "from-blue-600/30 via-blue-800/30 to-blue-900/30",
-      spot: "rgba(29,78,216,0.25)",
-      accent: { light: "#93c5fd", mid: "#60a5fa", deep: "#3b82f6", dark: "#2563eb", ring: "#2563eb", badge: "#1e40af", badgeBorder: "#3b82f6" },
-    }
-  } else if (hour >= 12 && hour < 17) {
-    return {
-      blobA: "from-indigo-800/40 via-blue-700/30 to-indigo-900/30",
-      blobB: "from-blue-600/30 via-indigo-700/30 to-indigo-900/30",
-      spot: "rgba(67,56,202,0.25)",
-      accent: { light: "#a5b4fc", mid: "#818cf8", deep: "#6366f1", dark: "#4f46e5", ring: "#4f46e5", badge: "#3730a3", badgeBorder: "#6366f1" },
-    }
-  } else if (hour >= 17 && hour < 21) {
-    return {
-      blobA: "from-purple-800/40 via-indigo-700/30 to-purple-900/30",
-      blobB: "from-indigo-600/30 via-purple-800/30 to-purple-900/30",
-      spot: "rgba(124,58,237,0.25)",
-      accent: { light: "#c4b5fd", mid: "#a78bfa", deep: "#8b5cf6", dark: "#7c3aed", ring: "#7c3aed", badge: "#5b21b6", badgeBorder: "#8b5cf6" },
+      blobA: "from-rose-800/30 via-orange-700/25 to-amber-900/20",
+      blobB: "from-amber-700/25 via-rose-800/20 to-orange-900/20",
+      spot: "rgba(244,63,94,0.2)",
+      accent: { light: "#fda4af", mid: "#fb7185", deep: "#f43f5e", dark: "#e11d48", ring: "#f43f5e", badge: "#9f1239", badgeBorder: "#fb7185" },
     }
   }
+
+  // Morning (7am-12pm): clear sky blue
+  if (hour >= 7 && hour < 12) {
+    return {
+      blobA: "from-sky-800/35 via-blue-700/25 to-sky-900/25",
+      blobB: "from-blue-600/25 via-sky-700/25 to-blue-900/25",
+      spot: "rgba(14,165,233,0.2)",
+      accent: { light: "#7dd3fc", mid: "#38bdf8", deep: "#0ea5e9", dark: "#0284c7", ring: "#0ea5e9", badge: "#075985", badgeBorder: "#0ea5e9" },
+    }
+  }
+
+  // Afternoon (12-5pm): deeper blue, slightly warmer
+  if (hour >= 12 && hour < 17) {
+    return {
+      blobA: "from-blue-800/35 via-indigo-700/25 to-blue-900/25",
+      blobB: "from-indigo-600/25 via-blue-700/25 to-indigo-900/25",
+      spot: "rgba(29,78,216,0.2)",
+      accent: { light: "#93c5fd", mid: "#60a5fa", deep: "#3b82f6", dark: "#2563eb", ring: "#3b82f6", badge: "#1e40af", badgeBorder: "#3b82f6" },
+    }
+  }
+
+  // Golden hour (5-7pm): warm amber and orange, sunset glow
+  if (hour >= 17 && hour < 19) {
+    return {
+      blobA: "from-orange-800/30 via-amber-700/25 to-rose-900/20",
+      blobB: "from-amber-700/25 via-orange-800/20 to-amber-900/20",
+      spot: "rgba(245,158,11,0.2)",
+      accent: { light: "#fcd34d", mid: "#fbbf24", deep: "#f59e0b", dark: "#d97706", ring: "#f59e0b", badge: "#92400e", badgeBorder: "#f59e0b" },
+    }
+  }
+
+  // Twilight (7-9pm): violet and purple, post-sunset sky
+  if (hour >= 19 && hour < 21) {
+    return {
+      blobA: "from-violet-800/35 via-purple-700/25 to-violet-900/25",
+      blobB: "from-purple-600/25 via-violet-800/25 to-purple-900/25",
+      spot: "rgba(139,92,246,0.2)",
+      accent: { light: "#c4b5fd", mid: "#a78bfa", deep: "#8b5cf6", dark: "#7c3aed", ring: "#8b5cf6", badge: "#5b21b6", badgeBorder: "#8b5cf6" },
+    }
+  }
+
+  // Night (9pm-5am): deep navy and indigo, cool darkness
   return {
-    blobA: "from-amber-900/30 via-orange-800/20 to-red-900/20",
-    blobB: "from-orange-800/20 via-amber-900/20 to-red-900/20",
-    spot: "rgba(180,83,9,0.2)",
-    accent: { light: "#fcd34d", mid: "#f59e0b", deep: "#d97706", dark: "#b45309", ring: "#d97706", badge: "#78350f", badgeBorder: "#d97706" },
+    blobA: "from-indigo-900/30 via-slate-800/20 to-indigo-950/20",
+    blobB: "from-slate-800/20 via-indigo-900/20 to-slate-900/20",
+    spot: "rgba(99,102,241,0.15)",
+    accent: { light: "#a5b4fc", mid: "#818cf8", deep: "#6366f1", dark: "#4f46e5", ring: "#6366f1", badge: "#312e81", badgeBorder: "#6366f1" },
   }
 }
 
