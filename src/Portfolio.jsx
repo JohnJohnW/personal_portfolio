@@ -162,10 +162,6 @@ const BASE =
     ? import.meta.env.BASE_URL
     : (typeof process !== 'undefined' && process.env && process.env.PUBLIC_URL ? process.env.PUBLIC_URL + '/' : '/');
 
-// Helper: convert channelId UC... -> uploads playlist UU...
-const uploadsPlaylist = (channelId) =>
-  channelId && channelId.startsWith("UC") ? `UU${channelId.slice(2)}` : "";
-
 function useTheme() {
   // Force dark theme always
   useEffect(() => {
@@ -310,7 +306,6 @@ export default function Portfolio() {
               {[
                 { id: "home",       label: "Home"       },
                 { id: "projects",   label: "Projects"   },
-                { id: "videos",     label: "Videos"     },
                 { id: "experience", label: "Experience" },
                 { id: "education",  label: "Education"  },
               ].map((t) => (
@@ -422,26 +417,6 @@ export default function Portfolio() {
           </div>
         </motion.div>
       </div>
-
-      <Section id="videos" title="Videos" className="!pt-4">
-        <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl">
-          <div className="aspect-video w-full">
-            <iframe
-              className="h-full w-full"
-              src={`https://www.youtube.com/embed?listType=playlist&list=${uploadsPlaylist("UCPjlP0gPZNv9C1R3koFaePw")}`}
-              title="YouTube playlist"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        </div>
-        <div className="mt-6 flex justify-end">
-          <a href="https://www.youtube.com/@john_wynter" target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-xl hover:bg-white/10">
-            View channel
-          </a>
-        </div>
-      </Section>
 
       <Section id="experience" title="Experience" className="!pt-4">
         <div className="relative pl-8 overflow-visible">
