@@ -27,6 +27,16 @@ const DATA = {
       stack: ["Python", "FastAPI", "Gemini AI", "FAISS", "React", "Cytoscape.js", "SQLite", "AML/CTF"],
     },
     {
+      title: "QUT LITS Website",
+      tag: "2025",
+      desc: "Official website for the QUT Law, Innovation, Technology and Society club. Features animated backgrounds, responsive navigation, interactive slideshow, tilt effects, and smooth scroll animations. Deployed via GitHub Pages with automated CI/CD.",
+      links: [
+        { href: "https://qutlitsociety.com", label: "Live" },
+        { href: "https://github.com/litsociety/qut-lits-website", label: "Repo" },
+      ],
+      stack: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
+    },
+    {
       title: "Audit Trail",
       tag: "2026",
       desc: "SaaS compliance automation platform that maps GitHub repository activity to audit-ready evidence across 8 major frameworks including ISO 27001, SOC 2, GDPR, NIST CSF, and PCI DSS. Connects via GitHub OAuth (read-only metadata only), scores 63 controls automatically, and provides a live gap analysis dashboard, continuous monitoring alerts, and a shareable auditor portal with PDF/CSV export.",
