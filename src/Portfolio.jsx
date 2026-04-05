@@ -192,6 +192,24 @@ function useTheme() {
 
 function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
+function useScrollY() {
+  const [y, setY] = useState(0)
+  useEffect(() => {
+    const onScroll = () => setY(window.scrollY)
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+  return y
+}
+
+function getGreeting() {
+  const hour = new Date().getHours()
+  if (hour >= 5 && hour < 12) return "Good morning, I'm"
+  if (hour >= 12 && hour < 17) return "Good afternoon, I'm"
+  if (hour >= 17 && hour < 21) return "Good evening, I'm"
+  return "Hey, I'm"
+}
+
 function getTimeColors() {
   const hour = new Date().getHours()
 
@@ -281,12 +299,38 @@ function Spotlight() {
     `radial-gradient(600px at var(--spot-x, 50%) var(--spot-y, 50%), ${spot}, transparent 60%)`}}/>;
 }
 
+function CursorTrail() {
+  const [trail, setTrail] = useState([])
+  useEffect(() => {
+    const onMove = (e) => {
+      setTrail(prev => [...prev.slice(-5), { x: e.clientX, y: e.clientY, id: Date.now() }])
+    }
+    window.addEventListener("pointermove", onMove)
+    return () => window.removeEventListener("pointermove", onMove)
+  }, [])
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[1]" aria-hidden>
+      {trail.map((p, i) => (
+        <div key={p.id} className="absolute rounded-full"
+          style={{
+            left: p.x - 6, top: p.y - 6, width: 12, height: 12,
+            background: `var(--accent-mid)`,
+            opacity: (i + 1) / trail.length * 0.3,
+            filter: "blur(4px)",
+            transition: "opacity 0.3s",
+          }} />
+      ))}
+    </div>
+  )
+}
+
 function LiquidBlobs() {
   const { blobA, blobB } = getTimeColors()
+  const scrollY = useScrollY()
   return (
     <div className="fixed -z-10 inset-0 overflow-hidden">
-      <div className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
-      <div className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
+      <div className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-50 mix-blend-screen animate-pulse`} style={{ transform: `translate(${scrollY * 0.05}px, ${scrollY * 0.15}px)` }} />
+      <div className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-50 mix-blend-screen animate-pulse`} style={{ transform: `translate(${scrollY * -0.05}px, ${scrollY * -0.1}px)` }} />
     </div>
   )
 }
@@ -315,18 +359,23 @@ function Tilt({ children }) {
   return <motion.div ref={ref} style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>{children}</motion.div>;
 }
 
-function Section({ id, title, icon: Icon, children, subtitle, className = "" }) {
+function Section({ id, title, icon: Icon, children, subtitle, className = "", fromRight = false }) {
+  const xOffset = fromRight ? 30 : -30
   return (
-    <section id={id} className={`relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 ${className}`}>
-      <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }}
+    <section id={id} className={`relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 snap-start ${className}`}>
+      <motion.h2 initial={{ opacity: 0, x: xOffset }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 0.5 }}
         className="flex items-center gap-3 text-2xl sm:text-3xl font-semibold tracking-tight">
         {Icon && <Icon className="h-6 w-6" />} {title}
       </motion.h2>
       {subtitle && (
-        <motion.p initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.5 }}
+        <motion.p initial={{ opacity: 0, x: xOffset }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           className="mt-2 text-sm/6 text-neutral-300">{subtitle}</motion.p>
       )}
-      <div className="mt-8">{children}</div>
+      <motion.div initial={{ opacity: 0, x: xOffset }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.5, delay: 0.15 }}
+        className="mt-8">{children}</motion.div>
     </section>
   );
 }
@@ -368,9 +417,13 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen text-neutral-100 selection:bg-white/20" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+    <div className="min-h-screen text-neutral-100 selection:bg-white/20 snap-y snap-proximity" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
       <LiquidBlobs />
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[2] opacity-[0.03]"
+        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", backgroundSize: "256px 256px" }} />
       <Spotlight />
+      <CursorTrail />
 
       <header className="sticky top-4 z-50 mx-auto max-w-6xl px-4">
         <div className="backdrop-blur-xl bg-black/20 border border-white/10 shadow-lg rounded-2xl">
@@ -404,9 +457,13 @@ export default function Portfolio() {
       <section id="home" className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <div className="md:order-1">
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+            <motion.h1 initial={{ opacity: 1 }} animate={{ opacity: 1 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">
-              {DATA.name}
+              {DATA.name.split("").map((char, i) => (
+                <motion.span key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03, duration: 0.4 }} style={{ display: "inline-block" }}>
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
               <br />
               <span style={{ background: `linear-gradient(to right, var(--accent-light), var(--accent-mid), var(--accent-deep))`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{DATA.role}</span>
             </motion.h1>
@@ -432,11 +489,20 @@ export default function Portfolio() {
                       onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   </div>
                   <div>
-                    <p className="text-sm text-neutral-400">Hi, I'm</p>
+                    <p className="text-sm text-neutral-400">{getGreeting()}</p>
                     <p className="text-xl font-semibold">{DATA.name}</p>
                   </div>
                 </div>
-                <div className="mt-5 flex items-center justify-between gap-3">
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {DATA.socials.map((s) => (
+                    <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                      className="group/social inline-flex items-center gap-1 text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1 hover:bg-white/10 transition-all">
+                      <span>{s.label.charAt(0)}</span>
+                      <span className="max-w-0 overflow-hidden group-hover/social:max-w-[80px] transition-all duration-300 whitespace-nowrap">{s.label.slice(1)}</span>
+                    </a>
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="text-sm text-neutral-400">{DATA.location}</div>
                   <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
                     Get in touch
@@ -447,6 +513,23 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { value: DATA.projects.length, label: "Projects" },
+            { value: DATA.projects.filter(p => p.links.length > 0).length, label: "Live Demos" },
+            { value: new Set(DATA.projects.flatMap(p => p.stack)).size, label: "Technologies" },
+          ].map((stat, i) => (
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              className="text-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl py-4">
+              <div className="text-2xl font-bold" style={{ color: "var(--accent-light)" }}>{stat.value}</div>
+              <div className="text-xs text-neutral-400 mt-1">{stat.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
       <Section id="projects" title="Projects" className="!pt-4 !pb-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -470,7 +553,8 @@ export default function Portfolio() {
                   </a>
                 ))}
               </div>
-              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: `conic-gradient(from 180deg at 50% 50%, color-mix(in srgb, var(--accent-deep) 30%, transparent), color-mix(in srgb, var(--accent-dark) 30%, transparent), color-mix(in srgb, var(--accent-mid) 25%, transparent), color-mix(in srgb, var(--accent-deep) 30%, transparent))` }} />
+              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition duration-300"
+                style={{ background: `linear-gradient(135deg, var(--accent-light), var(--accent-deep), var(--accent-mid))`, mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", maskComposite: "exclude", WebkitMaskComposite: "xor", padding: "1.5px", borderRadius: "1.5rem" }} />
             </motion.article>
           ))}
         </div>
@@ -494,7 +578,7 @@ export default function Portfolio() {
         </motion.div>
       </div>
 
-      <Section id="experience" title="Experience" className="!pt-4">
+      <Section id="experience" title="Experience" className="!pt-4" fromRight>
         <div className="relative pl-8 overflow-visible">
           {/* Gradient timeline line */}
           <motion.div
@@ -513,7 +597,7 @@ export default function Portfolio() {
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0 }}
                 whileHover={{ scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
@@ -535,7 +619,7 @@ export default function Portfolio() {
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: 0.05 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.05 }}
                 whileHover={{ scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
@@ -557,7 +641,7 @@ export default function Portfolio() {
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.1 }}
                 whileHover={{ scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
@@ -580,7 +664,7 @@ export default function Portfolio() {
                       initial={{ opacity: 0, scale: 0 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.3, delay: 0.2 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
                       whileHover={{ scale: 1.3 }}
                       className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-dark))` }}
                     />
@@ -597,7 +681,7 @@ export default function Portfolio() {
                       initial={{ opacity: 0, scale: 0 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.3, delay: 0.25 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.25 }}
                       whileHover={{ scale: 1.3 }}
                       className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 transition-transform duration-200"
                     />
@@ -614,7 +698,7 @@ export default function Portfolio() {
                       initial={{ opacity: 0, scale: 0 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.3, delay: 0.3 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.3 }}
                       whileHover={{ scale: 1.3 }}
                       className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 transition-transform duration-200"
                     />
@@ -635,7 +719,7 @@ export default function Portfolio() {
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: 0.15 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.15 }}
                 whileHover={{ scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
               />
@@ -657,7 +741,7 @@ export default function Portfolio() {
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
                 whileHover={{ scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
               />
@@ -679,7 +763,7 @@ export default function Portfolio() {
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: 0.25 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.25 }}
                 whileHover={{ scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
               />
@@ -728,7 +812,7 @@ export default function Portfolio() {
                   initial={{ opacity: 0, scale: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15, delay: i * 0.1 }}
                   whileHover={{ scale: 1.2 }}
                   className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
                 />
@@ -748,7 +832,7 @@ export default function Portfolio() {
         </div>
       </Section>
 
-      <Section id="contact" title="Contact" className="!pt-4">
+      <Section id="contact" title="Contact" className="!pt-4" fromRight>
         <motion.form initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }}
           onSubmit={onSubmit}
           className="max-w-2xl mx-auto rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8">
@@ -800,5 +884,6 @@ export default function Portfolio() {
       </footer>
 
     </div>
+    </motion.div>
   );
 }
