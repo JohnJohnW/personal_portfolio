@@ -199,25 +199,40 @@ function getTimeColors() {
       blobA: "from-blue-800/40 via-blue-700/30 to-blue-900/30",
       blobB: "from-blue-600/30 via-blue-800/30 to-blue-900/30",
       spot: "rgba(29,78,216,0.25)",
+      accent: { light: "#93c5fd", mid: "#60a5fa", deep: "#3b82f6", dark: "#2563eb", ring: "#2563eb", badge: "#1e40af", badgeBorder: "#3b82f6" },
     }
   } else if (hour >= 12 && hour < 17) {
     return {
       blobA: "from-indigo-800/40 via-blue-700/30 to-indigo-900/30",
       blobB: "from-blue-600/30 via-indigo-700/30 to-indigo-900/30",
       spot: "rgba(67,56,202,0.25)",
+      accent: { light: "#a5b4fc", mid: "#818cf8", deep: "#6366f1", dark: "#4f46e5", ring: "#4f46e5", badge: "#3730a3", badgeBorder: "#6366f1" },
     }
   } else if (hour >= 17 && hour < 21) {
     return {
       blobA: "from-purple-800/40 via-indigo-700/30 to-purple-900/30",
       blobB: "from-indigo-600/30 via-purple-800/30 to-purple-900/30",
       spot: "rgba(124,58,237,0.25)",
+      accent: { light: "#c4b5fd", mid: "#a78bfa", deep: "#8b5cf6", dark: "#7c3aed", ring: "#7c3aed", badge: "#5b21b6", badgeBorder: "#8b5cf6" },
     }
   }
   return {
     blobA: "from-amber-900/30 via-orange-800/20 to-red-900/20",
     blobB: "from-orange-800/20 via-amber-900/20 to-red-900/20",
     spot: "rgba(180,83,9,0.2)",
+    accent: { light: "#fcd34d", mid: "#f59e0b", deep: "#d97706", dark: "#b45309", ring: "#d97706", badge: "#78350f", badgeBorder: "#d97706" },
   }
+}
+
+function useAccentColors() {
+  const colors = getTimeColors()
+  useEffect(() => {
+    const root = document.documentElement
+    Object.entries(colors.accent).forEach(([key, val]) => {
+      root.style.setProperty(`--accent-${key}`, val)
+    })
+  }, [])
+  return colors
 }
 
 function Spotlight() {
@@ -288,6 +303,7 @@ function Section({ id, title, icon: Icon, children, subtitle, className = "" }) 
 
 export default function Portfolio() {
   useTheme();
+  const timeColors = useAccentColors();
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -322,7 +338,7 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(1400px_1000px_at_20%_-10%,rgba(30,58,138,.15),transparent),radial-gradient(1400px_1000px_at_80%_110%,rgba(29,78,216,.1),transparent)] text-neutral-100 selection:bg-blue-700/30">
+    <div className="min-h-screen text-neutral-100 selection:bg-blue-700/30" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
       <LiquidBlobs />
       <Spotlight />
 
@@ -362,14 +378,14 @@ export default function Portfolio() {
               className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">
               {DATA.name}
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-400 to-blue-500">{DATA.role}</span>
+              <span style={{ background: `linear-gradient(to right, var(--accent-light), var(--accent-mid), var(--accent-deep))`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{DATA.role}</span>
             </motion.h1>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="#projects" onClick={scrollTo("projects")} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-xl hover:bg-white/10 transition">
                 Explore projects
               </a>
-              <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-blue-600 via-blue-500 to-blue-400 px-4 py-2 text-white shadow-lg hover:opacity-90 transition">
+              <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-white shadow-lg hover:opacity-90 transition" style={{ background: `linear-gradient(to top right, var(--accent-deep), var(--accent-mid), var(--accent-light))` }}>
                 Contact
               </a>
             </div>
@@ -381,7 +397,7 @@ export default function Portfolio() {
                 style={{ transformStyle: "preserve-3d" }}>
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500">
+                  <div className="h-12 w-12 rounded-2xl overflow-hidden" style={{ background: `linear-gradient(to bottom right, var(--accent-dark), var(--accent-deep), var(--accent-mid))` }}>
                     <img src={DATA.avatar} alt="John Wynter headshot" className="h-full w-full object-cover"
                       onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   </div>
@@ -432,7 +448,7 @@ export default function Portfolio() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.5 }}
-          className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-tr from-blue-900/40 via-blue-800/20 to-blue-900/40 backdrop-blur-xl p-6">
+          className="relative overflow-hidden rounded-3xl border border-white/10 backdrop-blur-xl p-6" style={{ background: `linear-gradient(to top right, color-mix(in srgb, var(--accent-dark) 40%, transparent), color-mix(in srgb, var(--accent-dark) 20%, transparent), color-mix(in srgb, var(--accent-dark) 40%, transparent))` }}>
           <div className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-60"
                style={{ background: "url('data:image/svg+xml;utf8, %3Csvg width=\\\"60\\\" height=\\\"60\\\" viewBox=\\\"0 0 60 60\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\"%3E%3Cg fill=\\\"none\\\" stroke=\\\"white\\\" stroke-opacity=\\\"0.06\\\"%3E%3Cpath d=\\\"M0 30h60M30 0v60\\\"/%3E%3C/g%3E%3C/svg%3E')"}} />
           <div className="relative z-10 grid md:grid-cols-2 gap-6 items-center">
@@ -456,8 +472,8 @@ export default function Portfolio() {
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            style={{ originY: 0 }}
-            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-blue-500/80 via-blue-700/50 to-blue-900/20"
+            style={{ originY: 0, background: `linear-gradient(to bottom, color-mix(in srgb, var(--accent-mid) 80%, transparent), color-mix(in srgb, var(--accent-dark) 50%, transparent), color-mix(in srgb, var(--accent-dark) 20%, transparent))` }}
+            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full"
           />
           <ul className="space-y-4">
 
@@ -469,7 +485,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.3, delay: 0 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -478,7 +494,7 @@ export default function Portfolio() {
                     <p className="font-semibold text-white/95">Information Security (Governance, Risk and Compliance) Associate</p>
                     <p className="text-sm text-white/50">Queensland University of Technology</p>
                   </div>
-                  <span className="text-xs font-medium text-blue-300 bg-blue-700/[0.2] px-3 py-1.5 rounded-full w-fit border border-blue-500/30">Mar 2026 - Present</span>
+                  <span className="text-xs font-medium px-3 py-1.5 rounded-full w-fit" style={{ color: "var(--accent-light)", backgroundColor: "color-mix(in srgb, var(--accent-badge) 20%, transparent)", borderWidth: "1px", borderStyle: "solid", borderColor: "color-mix(in srgb, var(--accent-badgeBorder) 30%, transparent)" }}>Mar 2026 - Present</span>
                 </div>
               </div>
             </li>
@@ -491,7 +507,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.3, delay: 0.05 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -500,7 +516,7 @@ export default function Portfolio() {
                     <p className="font-semibold text-white/95">General Executive</p>
                     <p className="text-sm text-white/50">QUT Cyber Security Club</p>
                   </div>
-                  <span className="text-xs font-medium text-blue-300 bg-blue-700/[0.2] px-3 py-1.5 rounded-full w-fit border border-blue-500/30">Oct 2025 - Present</span>
+                  <span className="text-xs font-medium px-3 py-1.5 rounded-full w-fit" style={{ color: "var(--accent-light)", backgroundColor: "color-mix(in srgb, var(--accent-badge) 20%, transparent)", borderWidth: "1px", borderStyle: "solid", borderColor: "color-mix(in srgb, var(--accent-badgeBorder) 30%, transparent)" }}>Oct 2025 - Present</span>
                 </div>
               </div>
             </li>
@@ -513,7 +529,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -525,8 +541,8 @@ export default function Portfolio() {
                     whileInView={{ scaleY: 1 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.4, delay: 0.15 }}
-                    style={{ originY: 0 }}
-                    className="absolute left-0 top-1 bottom-1 w-0.5 bg-gradient-to-b from-blue-500/70 to-blue-500/10 rounded-full"
+                    style={{ originY: 0, background: `linear-gradient(to bottom, color-mix(in srgb, var(--accent-mid) 70%, transparent), color-mix(in srgb, var(--accent-mid) 10%, transparent))` }}
+                    className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full"
                   />
                   {/* Vice President - active */}
                   <div className="relative group">
@@ -536,12 +552,12 @@ export default function Portfolio() {
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ duration: 0.3, delay: 0.2 }}
                       whileHover={{ scale: 1.3 }}
-                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 transition-transform duration-200"
+                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-dark))` }}
                     />
                     <div className="pl-4">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                         <p className="text-sm font-medium text-white/90">Vice President</p>
-                        <span className="text-xs text-blue-300 bg-blue-700/[0.2] px-2.5 py-1 rounded-full w-fit border border-blue-500/30">Feb 2026 - Present</span>
+                        <span className="text-xs px-2.5 py-1 rounded-full w-fit" style={{ color: "var(--accent-light)", backgroundColor: "color-mix(in srgb, var(--accent-badge) 20%, transparent)", borderWidth: "1px", borderStyle: "solid", borderColor: "color-mix(in srgb, var(--accent-badgeBorder) 30%, transparent)" }}>Feb 2026 - Present</span>
                       </div>
                     </div>
                   </div>
@@ -661,8 +677,8 @@ export default function Portfolio() {
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            style={{ originY: 0 }}
-            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-blue-500/80 via-blue-700/50 to-blue-900/20"
+            style={{ originY: 0, background: `linear-gradient(to bottom, color-mix(in srgb, var(--accent-mid) 80%, transparent), color-mix(in srgb, var(--accent-dark) 50%, transparent), color-mix(in srgb, var(--accent-dark) 20%, transparent))` }}
+            className="absolute left-[6.75px] top-2 bottom-2 w-[3px] rounded-full"
           />
           <ul className="space-y-4">
             {[
@@ -684,7 +700,7 @@ export default function Portfolio() {
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.3, delay: i * 0.1 }}
                   whileHover={{ scale: 1.2 }}
-                  className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 z-10 transition-transform duration-200"
+                  className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
                 />
                 <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -693,7 +709,7 @@ export default function Portfolio() {
                       <p className="font-semibold text-white/95">{e.degree}</p>
                       <p className="text-sm text-white/50 mt-1">{e.uni}</p>
                     </div>
-                    <span className="text-xs font-medium text-blue-300 bg-blue-700/[0.2] px-3 py-1.5 rounded-full w-fit whitespace-nowrap border border-blue-500/30">{e.when}</span>
+                    <span className="text-xs font-medium px-3 py-1.5 rounded-full w-fit whitespace-nowrap" style={{ color: "var(--accent-light)", backgroundColor: "color-mix(in srgb, var(--accent-badge) 20%, transparent)", borderWidth: "1px", borderStyle: "solid", borderColor: "color-mix(in srgb, var(--accent-badgeBorder) 30%, transparent)" }}>{e.when}</span>
                   </div>
                 </div>
               </li>
@@ -709,21 +725,21 @@ export default function Portfolio() {
           <div className="grid gap-6">
             <div className="grid gap-3">
               <label className="text-sm font-medium">Name
-                <input name="name" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                <input name="name" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 transition-all" style={{ "--tw-ring-color": "var(--accent-ring)" }} />
               </label>
             </div>
             <div className="grid gap-3">
               <label className="text-sm font-medium">Email
-                <input name="email" type="email" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                <input name="email" type="email" required className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 transition-all" style={{ "--tw-ring-color": "var(--accent-ring)" }} />
               </label>
             </div>
             <div className="grid gap-3">
               <label className="text-sm font-medium">Message
-                <textarea name="message" rows={6} className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 transition-all resize-none" placeholder="Your message..." />
+                <textarea name="message" rows={6} className="mt-2 w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:ring-2 transition-all resize-none" style={{ "--tw-ring-color": "var(--accent-ring)" }} placeholder="Your message..." />
               </label>
             </div>
             <div className="flex justify-end pt-2">
-              <button className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-tr from-blue-600 via-blue-500 to-blue-400 px-6 py-3 text-white shadow-lg hover:opacity-90 transition-all">
+              <button className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-white shadow-lg hover:opacity-90 transition-all" style={{ background: `linear-gradient(to top right, var(--accent-deep), var(--accent-mid), var(--accent-light))` }}>
                 Send Message
               </button>
             </div>
