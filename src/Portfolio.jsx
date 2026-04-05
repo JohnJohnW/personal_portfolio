@@ -240,8 +240,8 @@ function LiquidBlobs() {
   const { blobA, blobB } = getTimeColors()
   return (
     <div className="fixed -z-10 inset-0 overflow-hidden">
-      <div className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-70 mix-blend-screen animate-pulse`} />
-      <div className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-70 mix-blend-screen animate-pulse`} />
+      <div className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
+      <div className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
     </div>
   )
 }
@@ -322,7 +322,7 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(1200px_800px_at_20%_-10%,rgba(30,58,138,.25),transparent),radial-gradient(1200px_800px_at_80%_110%,rgba(29,78,216,.15),transparent)] text-neutral-100 selection:bg-blue-700/30">
+    <div className="min-h-screen bg-[radial-gradient(1400px_1000px_at_20%_-10%,rgba(30,58,138,.15),transparent),radial-gradient(1400px_1000px_at_80%_110%,rgba(29,78,216,.1),transparent)] text-neutral-100 selection:bg-blue-700/30">
       <LiquidBlobs />
       <Spotlight />
 
