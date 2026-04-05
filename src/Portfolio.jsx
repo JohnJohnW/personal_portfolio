@@ -192,38 +192,6 @@ function useTheme() {
 
 function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
-function useGitHubStreak(username) {
-  const [streak, setStreak] = useState(null)
-  useEffect(() => {
-    fetch(`https://api.github.com/users/${username}/events/public?per_page=100`)
-      .then(r => r.ok ? r.json() : [])
-      .then(events => {
-        const pushDates = new Set()
-        events.forEach(e => {
-          if (e.type === "PushEvent") pushDates.add(e.created_at.slice(0, 10))
-        })
-        let count = 0
-        const d = new Date()
-        while (true) {
-          const key = d.toISOString().slice(0, 10)
-          if (pushDates.has(key)) {
-            count++
-            d.setDate(d.getDate() - 1)
-          } else if (count === 0) {
-            d.setDate(d.getDate() - 1)
-            if (pushDates.has(d.toISOString().slice(0, 10))) {
-              count++
-              d.setDate(d.getDate() - 1)
-            } else break
-          } else break
-        }
-        if (count > 0) setStreak(count)
-      })
-      .catch(() => {})
-  }, [username])
-  return streak
-}
-
 function getTimeColors() {
   const hour = new Date().getHours()
   if (hour >= 6 && hour < 12) {
@@ -320,7 +288,6 @@ function Section({ id, title, icon: Icon, children, subtitle, className = "" }) 
 
 export default function Portfolio() {
   useTheme();
-  const streak = useGitHubStreak("JohnJohnW")
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -424,15 +391,7 @@ export default function Portfolio() {
                   </div>
                 </div>
                 <div className="mt-5 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="text-sm text-neutral-400">{DATA.location}</div>
-                    {streak && (
-                      <div className="flex items-center gap-1.5 text-sm text-emerald-400">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        {streak}-day streak
-                      </div>
-                    )}
-                  </div>
+                  <div className="text-sm text-neutral-400">{DATA.location}</div>
                   <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
                     Get in touch
                   </a>
@@ -445,44 +404,29 @@ export default function Portfolio() {
 
       <Section id="projects" title="Projects" className="!pt-4 !pb-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {DATA.projects.map((p, i) => {
-            const liveLink = p.links.find(l => l.label === "Live")
-            const liveUrl = liveLink ? liveLink.href : null
-            return (
-              <motion.article key={p.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: i * 0.03 }}
-                className="relative group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 hover:border-white/20 hover:shadow-xl transition overflow-hidden">
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="font-semibold">{p.title}</h3>
-                    <span className="text-xs text-neutral-400">{p.tag}</span>
-                  </div>
-                  <p className="mt-2 text-sm/6 text-neutral-200/90">{p.desc}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {p.stack.map((s) => (
-                      <span key={s} className="text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1">{s}</span>
-                    ))}
-                  </div>
-                  <div className="mt-4 flex gap-3">
-                    {p.links.map((l) => (
-                      <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-1 hover:underline">
-                        {l.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-                {liveUrl ? (
-                  <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 overflow-hidden">
-                    <iframe src={liveUrl} className="border-0 origin-top-left scale-[0.25]"
-                      style={{ width: "400%", height: "400%", pointerEvents: "none" }}
-                      loading="lazy" tabIndex={-1} title={`${p.title} preview`} />
-                    <div className="absolute inset-0 bg-black/50" />
-                  </div>
-                ) : (
-                  <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(29,78,216,.3), rgba(30,58,138,.3), rgba(59,130,246,.25), rgba(29,78,216,.3))" }} />
-                )}
-              </motion.article>
-            )
-          })}
+          {DATA.projects.map((p, i) => (
+            <motion.article key={p.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: i * 0.03 }}
+              className="relative group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 hover:border-white/20 hover:shadow-xl transition">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="font-semibold">{p.title}</h3>
+                <span className="text-xs text-neutral-400">{p.tag}</span>
+              </div>
+              <p className="mt-2 text-sm/6 text-neutral-200/90">{p.desc}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {p.stack.map((s) => (
+                  <span key={s} className="text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1">{s}</span>
+                ))}
+              </div>
+              <div className="mt-4 flex gap-3">
+                {p.links.map((l) => (
+                  <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-1 hover:underline">
+                    {l.label}
+                  </a>
+                ))}
+              </div>
+              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: "conic-gradient(from 180deg at 50% 50%, rgba(29,78,216,.3), rgba(30,58,138,.3), rgba(59,130,246,.25), rgba(29,78,216,.3))" }} />
+            </motion.article>
+          ))}
         </div>
       </Section>
 
