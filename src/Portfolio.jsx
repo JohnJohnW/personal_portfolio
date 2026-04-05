@@ -423,6 +423,7 @@ export default function Portfolio() {
                 { id: "projects",   label: "Projects"   },
                 { id: "experience", label: "Experience" },
                 { id: "education",  label: "Education"  },
+                { id: "certs",      label: "Certs"       },
               ].map((t) => (
                 <button key={t.id} onClick={scrollTo(t.id)}
                   className={cn("px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition",
@@ -788,6 +789,45 @@ export default function Portfolio() {
               </li>
             ))}
           </ul>
+        </div>
+      </Section>
+
+      <Section id="certs" title="Certifications" className="!pt-4" fromRight>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            {
+              name: "Microsoft Certified: Azure Fundamentals",
+              code: "AZ-900",
+              issuer: "Microsoft",
+              date: "2026",
+              href: "https://learn.microsoft.com/en-us/users/johnwynter-0915/credentials/3623d3d4d2b7f422",
+            },
+          ].map((cert, i) => (
+            <motion.a
+              key={cert.code}
+              href={cert.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: i * 0.05 }}
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 hover:border-white/20 hover:shadow-xl transition block"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-white/95">{cert.name}</p>
+                  <p className="text-sm text-white/50 mt-1">{cert.issuer}</p>
+                </div>
+                <span className="text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap shrink-0" style={{ color: "var(--accent-light)", backgroundColor: "color-mix(in srgb, var(--accent-badge) 20%, transparent)", borderWidth: "1px", borderStyle: "solid", borderColor: "color-mix(in srgb, var(--accent-badgeBorder) 30%, transparent)" }}>{cert.code}</span>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <span className="text-xs text-white/40">{cert.date}</span>
+                <span className="text-xs text-white/30">Verify credential</span>
+              </div>
+              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition" style={{ background: `conic-gradient(from 180deg at 50% 50%, color-mix(in srgb, var(--accent-deep) 30%, transparent), color-mix(in srgb, var(--accent-dark) 30%, transparent), color-mix(in srgb, var(--accent-mid) 25%, transparent), color-mix(in srgb, var(--accent-deep) 30%, transparent))` }} />
+            </motion.a>
+          ))}
         </div>
       </Section>
 
