@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 
 /* Personal portfolio - GH Pages + Web3Forms */
@@ -6,7 +6,6 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 const DATA = {
   name: "John Wynter",
   role: "Law | IT",
-  blurb: "",
   location: "Brisbane | Qld | Aus",
   avatar: "/personal_portfolio/headshot.png",
   socials: [
@@ -156,11 +155,6 @@ const DATA = {
   }),
 };
 
-// Cross-bundler base path (works with Vite, CRA, GH Pages)
-const BASE =
-  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL)
-    ? import.meta.env.BASE_URL
-    : (typeof process !== 'undefined' && process.env && process.env.PUBLIC_URL ? process.env.PUBLIC_URL + '/' : '/');
 
 function useTheme() {
   // Force dark theme always
@@ -192,99 +186,98 @@ function useTheme() {
 
 function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
-function useScrollY() {
-  const [y, setY] = useState(0)
-  useEffect(() => {
-    const onScroll = () => setY(window.scrollY)
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
-  return y
-}
 
 function getGreeting() {
-  const hour = new Date().getHours()
-  if (hour >= 5 && hour < 12) return "Good morning, I'm"
-  if (hour >= 12 && hour < 17) return "Good afternoon, I'm"
-  if (hour >= 17 && hour < 21) return "Good evening, I'm"
-  return "Hey, I'm"
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return "Good morning, I'm";
+  if (hour >= 12 && hour < 17) return "Good afternoon, I'm";
+  if (hour >= 17 && hour < 21) return "Good evening, I'm";
+  return "Hey, I'm";
 }
 
+let _cachedTimeColors = null;
 function getTimeColors() {
-  const hour = new Date().getHours()
+  if (_cachedTimeColors) return _cachedTimeColors;
+  const hour = new Date().getHours();
 
   // Dawn (5-7am): rose and gold, sunrise warmth
   if (hour >= 5 && hour < 7) {
-    return {
+    _cachedTimeColors = {
       blobA: "from-rose-800/30 via-orange-700/25 to-amber-900/20",
       blobB: "from-amber-700/25 via-rose-800/20 to-orange-900/20",
       spot: "rgba(244,63,94,0.2)",
       accent: { light: "#fda4af", mid: "#fb7185", deep: "#f43f5e", dark: "#e11d48", ring: "#f43f5e", badge: "#9f1239", badgeBorder: "#fb7185" },
-    }
+    };
+    return _cachedTimeColors;
   }
 
   // Morning (7am-12pm): clear sky blue
   if (hour >= 7 && hour < 12) {
-    return {
+    _cachedTimeColors = {
       blobA: "from-sky-800/35 via-blue-700/25 to-sky-900/25",
       blobB: "from-blue-600/25 via-sky-700/25 to-blue-900/25",
       spot: "rgba(14,165,233,0.2)",
       accent: { light: "#7dd3fc", mid: "#38bdf8", deep: "#0ea5e9", dark: "#0284c7", ring: "#0ea5e9", badge: "#075985", badgeBorder: "#0ea5e9" },
-    }
+    };
+    return _cachedTimeColors;
   }
 
   // Afternoon (12-5pm): deeper blue, slightly warmer
   if (hour >= 12 && hour < 17) {
-    return {
+    _cachedTimeColors = {
       blobA: "from-blue-800/35 via-indigo-700/25 to-blue-900/25",
       blobB: "from-indigo-600/25 via-blue-700/25 to-indigo-900/25",
       spot: "rgba(29,78,216,0.2)",
       accent: { light: "#93c5fd", mid: "#60a5fa", deep: "#3b82f6", dark: "#2563eb", ring: "#3b82f6", badge: "#1e40af", badgeBorder: "#3b82f6" },
-    }
+    };
+    return _cachedTimeColors;
   }
 
   // Golden hour (5-7pm): warm amber and orange, sunset glow
   if (hour >= 17 && hour < 19) {
-    return {
+    _cachedTimeColors = {
       blobA: "from-orange-800/30 via-amber-700/25 to-rose-900/20",
       blobB: "from-amber-700/25 via-orange-800/20 to-amber-900/20",
       spot: "rgba(245,158,11,0.2)",
       accent: { light: "#fcd34d", mid: "#fbbf24", deep: "#f59e0b", dark: "#d97706", ring: "#f59e0b", badge: "#92400e", badgeBorder: "#f59e0b" },
-    }
+    };
+    return _cachedTimeColors;
   }
 
   // Twilight (7-9pm): violet and purple, post-sunset sky
   if (hour >= 19 && hour < 21) {
-    return {
+    _cachedTimeColors = {
       blobA: "from-violet-800/35 via-purple-700/25 to-violet-900/25",
       blobB: "from-purple-600/25 via-violet-800/25 to-purple-900/25",
       spot: "rgba(139,92,246,0.2)",
       accent: { light: "#c4b5fd", mid: "#a78bfa", deep: "#8b5cf6", dark: "#7c3aed", ring: "#8b5cf6", badge: "#5b21b6", badgeBorder: "#8b5cf6" },
-    }
+    };
+    return _cachedTimeColors;
   }
 
   // Night (9pm-5am): deep navy and indigo, cool darkness
-  return {
+  _cachedTimeColors = {
     blobA: "from-indigo-900/30 via-slate-800/20 to-indigo-950/20",
     blobB: "from-slate-800/20 via-indigo-900/20 to-slate-900/20",
     spot: "rgba(99,102,241,0.15)",
     accent: { light: "#a5b4fc", mid: "#818cf8", deep: "#6366f1", dark: "#4f46e5", ring: "#6366f1", badge: "#312e81", badgeBorder: "#6366f1" },
-  }
+  };
+  return _cachedTimeColors;
 }
 
 function useAccentColors() {
-  const colors = getTimeColors()
+  const colors = getTimeColors();
   useEffect(() => {
-    const root = document.documentElement
+    const root = document.documentElement;
     Object.entries(colors.accent).forEach(([key, val]) => {
-      root.style.setProperty(`--accent-${key}`, val)
-    })
-  }, [])
-  return colors
+      root.style.setProperty(`--accent-${key}`, val);
+    });
+  }, []);
+  return colors;
 }
 
 function Spotlight() {
-  const { spot } = getTimeColors()
+  const { spot } = getTimeColors();
   useEffect(() => {
     const root = document.documentElement;
     const move = (e) => {
@@ -301,14 +294,31 @@ function Spotlight() {
 
 
 function LiquidBlobs() {
-  const { blobA, blobB } = getTimeColors()
-  const scrollY = useScrollY()
+  const { blobA, blobB } = getTimeColors();
+  const refA = useRef(null);
+  const refB = useRef(null);
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY;
+          if (refA.current) refA.current.style.transform = `translate(${y * 0.05}px, ${y * 0.15}px)`;
+          if (refB.current) refB.current.style.transform = `translate(${y * -0.05}px, ${y * -0.1}px)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
     <div className="fixed -z-10 inset-0 overflow-hidden">
-      <div className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-50 mix-blend-screen animate-pulse`} style={{ transform: `translate(${scrollY * 0.05}px, ${scrollY * 0.15}px)` }} />
-      <div className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-50 mix-blend-screen animate-pulse`} style={{ transform: `translate(${scrollY * -0.05}px, ${scrollY * -0.1}px)` }} />
+      <div ref={refA} className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
+      <div ref={refB} className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
     </div>
-  )
+  );
 }
 
 
@@ -335,14 +345,14 @@ function Tilt({ children }) {
   return <motion.div ref={ref} style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>{children}</motion.div>;
 }
 
-function Section({ id, title, icon: Icon, children, subtitle, className = "", fromRight = false }) {
+function Section({ id, title, children, subtitle, className = "", fromRight = false }) {
   const xOffset = fromRight ? 30 : -30
   return (
-    <section id={id} className={`relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 snap-start ${className}`}>
+    <section id={id} className={`relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 ${className}`}>
       <motion.h2 initial={{ opacity: 0, x: xOffset }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.4 }}
         transition={{ duration: 0.5 }}
         className="flex items-center gap-3 text-2xl sm:text-3xl font-semibold tracking-tight">
-        {Icon && <Icon className="h-6 w-6" />} {title}
+        {title}
       </motion.h2>
       {subtitle && (
         <motion.p initial={{ opacity: 0, x: xOffset }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.5 }}
@@ -358,7 +368,7 @@ function Section({ id, title, icon: Icon, children, subtitle, className = "", fr
 
 export default function Portfolio() {
   useTheme();
-  const timeColors = useAccentColors();
+  useAccentColors();
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -394,7 +404,7 @@ export default function Portfolio() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
-    <div className="min-h-screen text-neutral-100 selection:bg-white/20 snap-y snap-proximity" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
+    <div className="min-h-screen text-neutral-100 selection:bg-white/20" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
       <LiquidBlobs />
       <div aria-hidden className="pointer-events-none fixed inset-0 z-[2] opacity-[0.03]"
         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", backgroundSize: "256px 256px" }} />
@@ -433,8 +443,7 @@ export default function Portfolio() {
       <section id="home" className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <div className="md:order-1">
-            <motion.h1 initial={{ opacity: 1 }} animate={{ opacity: 1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">
               {DATA.name.split("").map((char, i) => (
                 <motion.span key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03, duration: 0.4 }} style={{ display: "inline-block" }}>
                   {char === " " ? "\u00A0" : char}
@@ -442,7 +451,7 @@ export default function Portfolio() {
               ))}
               <br />
               <span style={{ background: `linear-gradient(to right, var(--accent-light), var(--accent-mid), var(--accent-deep))`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{DATA.role}</span>
-            </motion.h1>
+            </h1>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="#projects" onClick={scrollTo("projects")} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-xl hover:bg-white/10 transition">
@@ -491,18 +500,18 @@ export default function Portfolio() {
                 <span className="text-xs text-neutral-400">{p.tag}</span>
               </div>
               <p className="mt-2 text-sm/6 text-neutral-200/90">{p.desc}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
+              {p.stack.length > 0 && <div className="mt-4 flex flex-wrap gap-2">
                 {p.stack.map((s) => (
                   <span key={s} className="text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1">{s}</span>
                 ))}
-              </div>
-              <div className="mt-4 flex gap-3">
+              </div>}
+              {p.links.length > 0 && <div className="mt-4 flex gap-3">
                 {p.links.map((l) => (
                   <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="text-sm inline-flex items-center gap-1 hover:underline">
                     {l.label}
                   </a>
                 ))}
-              </div>
+              </div>}
               <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition"
                 style={{ background: `conic-gradient(from 180deg at 50% 50%, color-mix(in srgb, var(--accent-deep) 30%, transparent), color-mix(in srgb, var(--accent-dark) 30%, transparent), color-mix(in srgb, var(--accent-mid) 25%, transparent), color-mix(in srgb, var(--accent-deep) 30%, transparent))` }} />
             </motion.article>
@@ -549,7 +558,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -571,7 +580,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.05 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -593,7 +602,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.1 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -616,7 +625,7 @@ export default function Portfolio() {
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
                       whileHover={{ scale: 1.3 }}
-                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-dark))` }}
+                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-dark))` }}
                     />
                     <div className="pl-4">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
@@ -633,7 +642,7 @@ export default function Portfolio() {
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.25 }}
                       whileHover={{ scale: 1.3 }}
-                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 transition-transform duration-200"
+                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600"
                     />
                     <div className="pl-4">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
@@ -650,7 +659,7 @@ export default function Portfolio() {
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.3 }}
                       whileHover={{ scale: 1.3 }}
-                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 transition-transform duration-200"
+                      className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600"
                     />
                     <div className="pl-4">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
@@ -671,7 +680,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.15 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10"
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -693,7 +702,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10"
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -715,7 +724,7 @@ export default function Portfolio() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.25 }}
                 whileHover={{ scale: 1.2 }}
-                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10 transition-transform duration-200"
+                className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10"
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-3xl pointer-events-none" />
@@ -764,7 +773,7 @@ export default function Portfolio() {
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15, delay: i * 0.1 }}
                   whileHover={{ scale: 1.2 }}
-                  className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10 transition-transform duration-200" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
+                  className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
                 />
                 <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent rounded-3xl pointer-events-none" />
