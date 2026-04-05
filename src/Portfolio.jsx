@@ -17,6 +17,16 @@ const DATA = {
   ],
   projects: [
     {
+      title: "STRATUM",
+      tag: "2026",
+      desc: "Beneficial ownership contradiction detection for AML/CTF Tranche 2 compliance. Accepts ASIC extracts, company constitutions, and shareholder registers, embeds them into a shared 3072-dimensional vector space using Gemini Embedding 2, detects cross-document contradictions indicating undisclosed beneficial ownership, and renders a live interactive ownership graph with AUSTRAC/FATF typology matching. Features Gemini-powered document parsing, SQLite persistence, and CDD report generation.",
+      links: [
+        { href: "https://johnjohnw.github.io/stratum/", label: "Live" },
+        { href: "https://github.com/JohnJohnW/stratum", label: "Repo" },
+      ],
+      stack: ["Python", "FastAPI", "Gemini AI", "FAISS", "React", "Cytoscape.js", "SQLite", "AML/CTF"],
+    },
+    {
       title: "Audit Trail",
       tag: "2026",
       desc: "SaaS compliance automation platform that maps GitHub repository activity to audit-ready evidence across 8 major frameworks including ISO 27001, SOC 2, GDPR, NIST CSF, and PCI DSS. Connects via GitHub OAuth (read-only metadata only), scores 63 controls automatically, and provides a live gap analysis dashboard, continuous monitoring alerts, and a shareable auditor portal with PDF/CSV export.",
