@@ -299,30 +299,6 @@ function Spotlight() {
     `radial-gradient(600px at var(--spot-x, 50%) var(--spot-y, 50%), ${spot}, transparent 60%)`}}/>;
 }
 
-function CursorTrail() {
-  const [trail, setTrail] = useState([])
-  useEffect(() => {
-    const onMove = (e) => {
-      setTrail(prev => [...prev.slice(-5), { x: e.clientX, y: e.clientY, id: Date.now() }])
-    }
-    window.addEventListener("pointermove", onMove)
-    return () => window.removeEventListener("pointermove", onMove)
-  }, [])
-  return (
-    <div className="pointer-events-none fixed inset-0 z-[1]" aria-hidden>
-      {trail.map((p, i) => (
-        <div key={p.id} className="absolute rounded-full"
-          style={{
-            left: p.x - 6, top: p.y - 6, width: 12, height: 12,
-            background: `var(--accent-mid)`,
-            opacity: (i + 1) / trail.length * 0.3,
-            filter: "blur(4px)",
-            transition: "opacity 0.3s",
-          }} />
-      ))}
-    </div>
-  )
-}
 
 function LiquidBlobs() {
   const { blobA, blobB } = getTimeColors()
@@ -423,7 +399,7 @@ export default function Portfolio() {
       <div aria-hidden className="pointer-events-none fixed inset-0 z-[2] opacity-[0.03]"
         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", backgroundSize: "256px 256px" }} />
       <Spotlight />
-      <CursorTrail />
+
 
       <header className="sticky top-4 z-50 mx-auto max-w-6xl px-4">
         <div className="backdrop-blur-xl bg-black/20 border border-white/10 shadow-lg rounded-2xl">
@@ -493,16 +469,7 @@ export default function Portfolio() {
                     <p className="text-xl font-semibold">{DATA.name}</p>
                   </div>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {DATA.socials.map((s) => (
-                    <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                      className="group/social inline-flex items-center gap-1 text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1 hover:bg-white/10 transition-all">
-                      <span>{s.label.charAt(0)}</span>
-                      <span className="max-w-0 overflow-hidden group-hover/social:max-w-[80px] transition-all duration-300 whitespace-nowrap">{s.label.slice(1)}</span>
-                    </a>
-                  ))}
-                </div>
-                <div className="mt-3 flex items-center justify-between gap-3">
+                <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="text-sm text-neutral-400">{DATA.location}</div>
                   <a href="#contact" onClick={scrollTo("contact")} className="inline-flex items-center gap-2 text-sm">
                     Get in touch
@@ -513,23 +480,6 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
-
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { value: DATA.projects.length, label: "Projects" },
-            { value: DATA.projects.filter(p => p.links.length > 0).length, label: "Live Demos" },
-            { value: new Set(DATA.projects.flatMap(p => p.stack)).size, label: "Technologies" },
-          ].map((stat, i) => (
-            <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              className="text-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl py-4">
-              <div className="text-2xl font-bold" style={{ color: "var(--accent-light)" }}>{stat.value}</div>
-              <div className="text-xs text-neutral-400 mt-1">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
 
       <Section id="projects" title="Projects" className="!pt-4 !pb-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -553,8 +503,8 @@ export default function Portfolio() {
                   </a>
                 ))}
               </div>
-              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition duration-300"
-                style={{ background: `linear-gradient(135deg, var(--accent-light), var(--accent-deep), var(--accent-mid))`, mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", maskComposite: "exclude", WebkitMaskComposite: "xor", padding: "1.5px", borderRadius: "1.5rem" }} />
+              <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition"
+                style={{ background: `conic-gradient(from 180deg at 50% 50%, color-mix(in srgb, var(--accent-deep) 30%, transparent), color-mix(in srgb, var(--accent-dark) 30%, transparent), color-mix(in srgb, var(--accent-mid) 25%, transparent), color-mix(in srgb, var(--accent-deep) 30%, transparent))` }} />
             </motion.article>
           ))}
         </div>
