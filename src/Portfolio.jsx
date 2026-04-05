@@ -19,7 +19,7 @@ const DATA = {
     {
       title: "STRATUM",
       tag: "2026",
-      desc: "Beneficial ownership contradiction detection for AML/CTF Tranche 2 compliance. Accepts ASIC extracts, company constitutions, and shareholder registers, embeds them into a shared 3072-dimensional vector space using Gemini Embedding 2, detects cross-document contradictions indicating undisclosed beneficial ownership, and renders a live interactive ownership graph with AUSTRAC/FATF typology matching. Features Gemini-powered document parsing, SQLite persistence, and CDD report generation.",
+      desc: "AML/CTF Tranche 2 compliance tool that cross-references ASIC extracts, company constitutions, and shareholder registers to detect undisclosed beneficial ownership. Uploads and parses corporate documents with Gemini, flags contradictions across them (e.g. nominee shareholders, unauthorised share classes, governance inconsistencies), and renders a live ownership graph with matched AUSTRAC/FATF typologies.",
       links: [
         { href: "https://johnjohnw.github.io/stratum/", label: "Live" },
         { href: "https://github.com/JohnJohnW/stratum", label: "Repo" },
@@ -29,7 +29,7 @@ const DATA = {
     {
       title: "QUT LITS Website",
       tag: "2025",
-      desc: "Official website for the QUT Law, Innovation, Technology and Society club. Features animated backgrounds, responsive navigation, interactive slideshow, tilt effects, and smooth scroll animations. Deployed via GitHub Pages with automated CI/CD.",
+      desc: "Built and maintain the official website for the QUT Law, Innovation, Technology and Society club as VP of IT. Custom domain at qutlitsociety.com with animated backgrounds, interactive slideshow, and responsive design.",
       links: [
         { href: "https://qutlitsociety.com", label: "Live" },
         { href: "https://github.com/litsociety/qut-lits-website", label: "Repo" },
