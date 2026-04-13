@@ -43,7 +43,7 @@ const DATA = {
         { href: "https://audittrail-dev.vercel.app/", label: "Live" },
         { href: "https://github.com/JohnJohnW/audittrail-dev", label: "Repo" },
       ],
-      stack: [],
+      stack: ["Next.js", "TypeScript", "Supabase", "Prisma", "Tailwind CSS", "GitHub OAuth", "Compliance"],
     },
     {
       title: "Evidencia",
@@ -186,6 +186,18 @@ function useTheme() {
 
 function cn(...xs) { return xs.filter(Boolean).join(" "); }
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: none)");
+    setMobile(mq.matches);
+    const handler = (e) => setMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return mobile;
+}
+
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -276,28 +288,247 @@ function useAccentColors() {
   return colors;
 }
 
-function Spotlight() {
+/* ── Weather system ─────────────────────────────────────── */
+
+const WEATHER_CACHE_KEY = "__portfolio_weather";
+
+function classifyWeather(code) {
+  if (code === 0) return "clear";
+  if (code <= 3) return "cloudy";
+  if (code >= 45 && code <= 48) return "fog";
+  if (code >= 51 && code <= 67) return "rain";
+  if (code >= 71 && code <= 77) return "snow";
+  if (code >= 80 && code <= 82) return "rain";
+  if (code >= 85 && code <= 86) return "snow";
+  if (code >= 95) return "storm";
+  return "clear";
+}
+
+function useWeather() {
+  const [weather, setWeather] = useState(null);
+  useEffect(() => {
+    const cached = sessionStorage.getItem(WEATHER_CACHE_KEY);
+    if (cached) { setWeather(JSON.parse(cached)); return; }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const geo = await fetch("https://ipapi.co/json/").then(r => r.json());
+        if (cancelled || !geo.latitude) return;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current=weather_code,wind_speed_10m&timezone=auto`;
+        const met = await fetch(url).then(r => r.json());
+        if (cancelled || !met.current) return;
+        const data = {
+          condition: classifyWeather(met.current.weather_code),
+          code: met.current.weather_code,
+          wind: met.current.wind_speed_10m || 0,
+        };
+        sessionStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(data));
+        setWeather(data);
+      } catch { /* graceful fallback: no weather effects */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+  return weather;
+}
+
+// Subtle color adjustments based on weather condition
+function weatherAdjustAccent(weather) {
+  if (!weather) return {};
+  const adjustments = {
+    clear:  { saturation: 1.1, lightness: 1.05 },
+    cloudy: { saturation: 0.8, lightness: 0.95 },
+    rain:   { saturation: 0.85, lightness: 0.9, hueShift: -10 },
+    snow:   { saturation: 0.7, lightness: 1.15 },
+    storm:  { saturation: 0.9, lightness: 0.8 },
+    fog:    { saturation: 0.6, lightness: 1.0 },
+  };
+  return adjustments[weather.condition] || {};
+}
+
+function useWeatherAccent(weather) {
+  useEffect(() => {
+    const adj = weatherAdjustAccent(weather);
+    if (!adj.saturation) return;
+    const root = document.documentElement;
+    root.style.setProperty("--weather-saturation", String(adj.saturation));
+    root.style.setProperty("--weather-lightness", String(adj.lightness));
+  }, [weather]);
+}
+
+/* ── Animated weather SVG backgrounds ──────────────────── */
+
+function WeatherRain() {
+  const lines = Array.from({ length: 40 }, (_, i) => ({
+    x: (i / 40) * 100,
+    delay: (i * 0.17) % 2,
+    dur: 0.6 + (i % 5) * 0.15,
+    opacity: 0.06 + (i % 4) * 0.02,
+  }));
+  return (
+    <svg className="pointer-events-none fixed inset-0 z-[1] w-full h-full" preserveAspectRatio="none">
+      <defs>
+        <style>{`
+          @keyframes rain-fall { 0% { transform: translateY(-5%); } 100% { transform: translateY(105%); } }
+        `}</style>
+      </defs>
+      {lines.map((l, i) => (
+        <line key={i} x1={`${l.x}%`} y1="0" x2={`${l.x - 1.5}%`} y2="2.5%"
+          stroke="white" strokeWidth="0.5" opacity={l.opacity}
+          style={{ animation: `rain-fall ${l.dur}s linear ${l.delay}s infinite` }} />
+      ))}
+    </svg>
+  );
+}
+
+function WeatherSnow() {
+  const flakes = Array.from({ length: 30 }, (_, i) => ({
+    cx: (i / 30) * 100,
+    delay: (i * 0.23) % 4,
+    dur: 4 + (i % 5) * 1.5,
+    r: 1 + (i % 3),
+    opacity: 0.05 + (i % 4) * 0.02,
+    drift: (i % 2 === 0 ? 2 : -2),
+  }));
+  return (
+    <svg className="pointer-events-none fixed inset-0 z-[1] w-full h-full" preserveAspectRatio="none">
+      <defs>
+        <style>{`
+          @keyframes snow-fall { 0% { transform: translate(0, -5%); } 50% { transform: translate(var(--drift), 50%); } 100% { transform: translate(0, 105%); } }
+        `}</style>
+      </defs>
+      {flakes.map((f, i) => (
+        <circle key={i} cx={`${f.cx}%`} cy="0" r={f.r}
+          fill="white" opacity={f.opacity}
+          style={{ "--drift": `${f.drift}%`, animation: `snow-fall ${f.dur}s ease-in-out ${f.delay}s infinite` }} />
+      ))}
+    </svg>
+  );
+}
+
+function WeatherWind() {
+  const paths = Array.from({ length: 8 }, (_, i) => ({
+    y: 10 + (i / 8) * 80,
+    delay: (i * 0.6) % 3,
+    dur: 3 + (i % 4) * 0.8,
+    opacity: 0.04 + (i % 3) * 0.02,
+  }));
+  return (
+    <svg className="pointer-events-none fixed inset-0 z-[1] w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <defs>
+        <style>{`
+          @keyframes wind-drift { 0% { stroke-dashoffset: 40; } 100% { stroke-dashoffset: -40; } }
+        `}</style>
+      </defs>
+      {paths.map((p, i) => (
+        <path key={i} d={`M -10 ${p.y} Q 30 ${p.y - 3} 50 ${p.y + 2} T 110 ${p.y}`}
+          fill="none" stroke="white" strokeWidth="0.15" opacity={p.opacity}
+          strokeDasharray="8 12"
+          style={{ animation: `wind-drift ${p.dur}s linear ${p.delay}s infinite` }} />
+      ))}
+    </svg>
+  );
+}
+
+function WeatherStorm() {
+  const [flash, setFlash] = useState(false);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() > 0.7) {
+        setFlash(true);
+        setTimeout(() => setFlash(false), 120);
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <>
+      <WeatherRain />
+      {flash && <div className="pointer-events-none fixed inset-0 z-[1] bg-white/[0.03] transition-opacity duration-100" />}
+    </>
+  );
+}
+
+function WeatherFog() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[1]">
+      <div className="absolute inset-0 opacity-[0.04]"
+        style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 30%, transparent 60%, rgba(255,255,255,0.3) 80%, transparent 100%)", animation: "fog-drift 20s ease-in-out infinite alternate" }} />
+      <div className="absolute inset-0 opacity-[0.03]"
+        style={{ background: "linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.4) 40%, transparent 70%, rgba(255,255,255,0.2) 90%, transparent 100%)", animation: "fog-drift 25s ease-in-out 3s infinite alternate-reverse" }} />
+    </div>
+  );
+}
+
+function WeatherClouds() {
+  const clouds = Array.from({ length: 5 }, (_, i) => ({
+    top: 5 + (i / 5) * 60,
+    delay: i * 4,
+    dur: 30 + i * 5,
+    size: 200 + (i % 3) * 100,
+    opacity: 0.02 + (i % 3) * 0.01,
+  }));
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[1] overflow-hidden">
+      {clouds.map((c, i) => (
+        <div key={i} className="absolute rounded-full"
+          style={{
+            top: `${c.top}%`, width: `${c.size}px`, height: `${c.size * 0.4}px`,
+            background: "radial-gradient(ellipse, rgba(255,255,255,0.5), transparent 70%)",
+            opacity: c.opacity, filter: "blur(30px)",
+            animation: `cloud-drift ${c.dur}s linear ${c.delay}s infinite`,
+          }} />
+      ))}
+    </div>
+  );
+}
+
+function WeatherEffects({ weather, isMobile }) {
+  if (!weather || isMobile) return null;
+  const { condition } = weather;
+  if (condition === "rain") return <WeatherRain />;
+  if (condition === "snow") return <WeatherSnow />;
+  if (condition === "storm") return <WeatherStorm />;
+  if (condition === "fog") return <WeatherFog />;
+  if (condition === "cloudy") return <WeatherClouds />;
+  // Wind effect: show if wind speed > 20 km/h and not already showing other effects
+  if (weather.wind > 20) return <WeatherWind />;
+  return null;
+}
+
+/* ── end weather ───────────────────────────────────────── */
+
+function Spotlight({ isMobile }) {
   const { spot } = getTimeColors();
   useEffect(() => {
+    if (isMobile) return;
     const root = document.documentElement;
+    let ticking = false;
     const move = (e) => {
-      const x = e.clientX; const y = e.clientY;
-      root.style.setProperty("--spot-x", x + "px");
-      root.style.setProperty("--spot-y", y + "px");
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          root.style.setProperty("--spot-x", e.clientX + "px");
+          root.style.setProperty("--spot-y", e.clientY + "px");
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("pointermove", move);
+    window.addEventListener("pointermove", move, { passive: true });
     return () => window.removeEventListener("pointermove", move);
-  }, []);
+  }, [isMobile]);
+  if (isMobile) return null;
   return <div aria-hidden className="pointer-events-none fixed inset-0 z-0" style={{ background:
     `radial-gradient(600px at var(--spot-x, 50%) var(--spot-y, 50%), ${spot}, transparent 60%)`}}/>;
 }
 
 
-function LiquidBlobs() {
+function LiquidBlobs({ isMobile }) {
   const { blobA, blobB } = getTimeColors();
   const refA = useRef(null);
   const refB = useRef(null);
   useEffect(() => {
+    if (isMobile) return;
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
@@ -312,23 +543,26 @@ function LiquidBlobs() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [isMobile]);
+  const blur = isMobile ? "blur-2xl" : "blur-3xl";
+  const pulse = isMobile ? "" : "animate-pulse";
   return (
     <div className="fixed -z-10 inset-0 overflow-hidden">
-      <div ref={refA} className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
-      <div ref={refB} className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} blur-3xl opacity-50 mix-blend-screen animate-pulse`} />
+      <div ref={refA} className={`absolute -top-24 -left-16 h-[40rem] w-[40rem] rounded-full bg-gradient-to-br ${blobA} ${blur} opacity-50 mix-blend-screen ${pulse}`} />
+      <div ref={refB} className={`absolute -bottom-24 -right-16 h-[38rem] w-[38rem] rounded-full bg-gradient-to-tr ${blobB} ${blur} opacity-50 mix-blend-screen ${pulse}`} />
     </div>
   );
 }
 
 
-function Tilt({ children }) {
+function Tilt({ children, isMobile }) {
   const ref = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  const x = useMotionValue(0.5);
+  const y = useMotionValue(0.5);
   const rotateX = useTransform(y, [0, 1], [8, -8]);
   const rotateY = useTransform(x, [0, 1], [-8, 8]);
   useEffect(() => {
+    if (isMobile) return;
     const el = ref.current; if (!el) return;
     const onMove = (e) => {
       const rect = el.getBoundingClientRect();
@@ -341,7 +575,8 @@ function Tilt({ children }) {
     el.addEventListener("pointermove", onMove);
     el.addEventListener("pointerleave", onLeave);
     return () => { el.removeEventListener("pointermove", onMove); el.removeEventListener("pointerleave", onLeave); };
-  }, [x, y]);
+  }, [x, y, isMobile]);
+  if (isMobile) return <div>{children}</div>;
   return <motion.div ref={ref} style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>{children}</motion.div>;
 }
 
@@ -369,6 +604,9 @@ function Section({ id, title, children, subtitle, className = "", fromRight = fa
 export default function Portfolio() {
   useTheme();
   useAccentColors();
+  const isMobile = useIsMobile();
+  const weather = useWeather();
+  useWeatherAccent(weather);
   const [active, setActive] = useState("home");
   const [toast, setToast] = useState(null);
 
@@ -405,10 +643,9 @@ export default function Portfolio() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
     <div className="min-h-screen text-neutral-100 selection:bg-white/20" style={{ background: `radial-gradient(1400px 1000px at 20% -10%, color-mix(in srgb, var(--accent-dark) 15%, transparent), transparent), radial-gradient(1400px 1000px at 80% 110%, color-mix(in srgb, var(--accent-deep) 10%, transparent), transparent)` }}>
-      <LiquidBlobs />
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-[2] opacity-[0.03]"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", backgroundSize: "256px 256px" }} />
-      <Spotlight />
+      <LiquidBlobs isMobile={isMobile} />
+      <Spotlight isMobile={isMobile} />
+      <WeatherEffects weather={weather} isMobile={isMobile} />
 
 
       <header className="sticky top-4 z-50 mx-auto max-w-6xl px-4">
@@ -464,7 +701,7 @@ export default function Portfolio() {
             </div>
           </div>
           <div className="relative md:order-2">
-            <Tilt>
+            <Tilt isMobile={isMobile}>
               <motion.div initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}
                 className="relative rounded-3xl border border-white/10 bg-black/20 backdrop-blur-xl p-6 shadow-2xl"
                 style={{ transformStyle: "preserve-3d" }}>
@@ -472,6 +709,7 @@ export default function Portfolio() {
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-2xl overflow-hidden" style={{ background: `linear-gradient(to bottom right, var(--accent-dark), var(--accent-deep), var(--accent-mid))` }}>
                     <img src={DATA.avatar} alt="John Wynter headshot" className="h-full w-full object-cover"
+                      width={48} height={48} loading="lazy"
                       onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   </div>
                   <div>
@@ -558,7 +796,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={isMobile ? undefined : { scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
@@ -580,7 +818,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.05 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={isMobile ? undefined : { scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
@@ -602,7 +840,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.1 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={isMobile ? undefined : { scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">
@@ -625,7 +863,7 @@ export default function Portfolio() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
-                      whileHover={{ scale: 1.3 }}
+                      whileHover={isMobile ? undefined : { scale: 1.3 }}
                       className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-dark))` }}
                     />
                     <div className="pl-4">
@@ -642,7 +880,7 @@ export default function Portfolio() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.25 }}
-                      whileHover={{ scale: 1.3 }}
+                      whileHover={isMobile ? undefined : { scale: 1.3 }}
                       className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600"
                     />
                     <div className="pl-4">
@@ -659,7 +897,7 @@ export default function Portfolio() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.3 }}
-                      whileHover={{ scale: 1.3 }}
+                      whileHover={isMobile ? undefined : { scale: 1.3 }}
                       className="absolute -left-[0.35rem] top-1.5 h-3 w-3 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600"
                     />
                     <div className="pl-4">
@@ -680,7 +918,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.15 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={isMobile ? undefined : { scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10"
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
@@ -702,7 +940,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={isMobile ? undefined : { scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10"
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
@@ -724,7 +962,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.25 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={isMobile ? undefined : { scale: 1.2 }}
                 className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-gradient-to-br from-neutral-500 to-neutral-600 z-10"
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-white/[0.01] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.1]">
@@ -773,7 +1011,7 @@ export default function Portfolio() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15, delay: i * 0.1 }}
-                  whileHover={{ scale: 1.2 }}
+                  whileHover={isMobile ? undefined : { scale: 1.2 }}
                   className="absolute left-[-31.5px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full z-10" style={{ background: `linear-gradient(to bottom right, var(--accent-light), var(--accent-mid), var(--accent-dark))` }}
                 />
                 <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl p-5 transition-transform duration-300 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-white/[0.15]">

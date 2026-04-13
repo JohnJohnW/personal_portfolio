@@ -32,3 +32,21 @@ body {
 section {
   contain: layout style;
 }
+
+/* Weather background animations */
+@keyframes fog-drift {
+  0% { transform: translateX(-10%); }
+  100% { transform: translateX(10%); }
+}
+
+@keyframes cloud-drift {
+  0% { left: -20%; }
+  100% { left: 110%; }
+}
+
+/* Reduce expensive backdrop-blur on touch devices */
+@media (hover: none) {
+  .backdrop-blur-xl {
+    --tw-backdrop-blur: blur(8px) !important;
+  }
+}
