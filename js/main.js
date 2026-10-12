@@ -1,6 +1,7 @@
 import { me, projects, experience, education, certs, toolkit } from "./data.js";
 import { settings, set, watch, RAMPS } from "./glyph.js";
 import { plate } from "./plate.js";
+import { sketch } from "./sketches.js";
 import { nameplate } from "./name.js";
 
 const FORM_KEY = "e3f86196-c795-4d77-b6a4-b03183583b4d";
@@ -49,6 +50,7 @@ function project(p, i) {
 ${tags}
 ${links}
 </div>
+<canvas class="plot" data-kind="${p.sketch}" aria-hidden="true"></canvas>
 </li>`;
 }
 
@@ -242,6 +244,8 @@ async function stage() {
     if (scene === "hands") opts.pull = () => form.contains(document.activeElement);
     pieces.push(plate(canvas, scene, opts));
   }
+
+  for (const canvas of $$("canvas.plot")) pieces.push(sketch(canvas, canvas.dataset.kind, still));
 
   // One drawing failing must not take the others down with it, so a piece
   // that throws is reported once and then left alone.
