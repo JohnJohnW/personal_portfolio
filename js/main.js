@@ -1,6 +1,7 @@
 import { me, projects, experience, education, certs, toolkit } from "./data.js";
 import { settings, set, watch, RAMPS } from "./glyph.js";
 import { plate } from "./plate.js";
+import { nameplate } from "./name.js";
 
 const FORM_KEY = "e3f86196-c795-4d77-b6a4-b03183583b4d";
 const SHOWN = 8;
@@ -225,7 +226,7 @@ function contact() {
 async function stage() {
   // the glyph atlas is cut from the page font, so wait for it (briefly)
   if (document.fonts) {
-    const wanted = document.fonts.load('12px "IBM Plex Mono"');
+    const wanted = Promise.all([document.fonts.load('12px "IBM Plex Mono"'), document.fonts.load('100px "Anton"', "JOHNWYTER")]);
     await Promise.race([wanted, new Promise((r) => setTimeout(r, 1800))]).catch(() => {});
   }
 
@@ -235,8 +236,8 @@ async function stage() {
   for (const canvas of $$("canvas.plate")) {
     const scene = canvas.dataset.scene;
     const opts = { still };
-    // the arm gets a stage the size of the whole hero, so loose characters can travel
-    if (scene === "arm") Object.assign(opts, { box: $(".hero-figure"), scatter: true });
+    // the arm shares a stage the size of the whole hero with the name
+    if (scene === "arm") Object.assign(opts, { box: $(".hero-figure"), scatter: true, overlay: nameplate($(".hero-name")) });
     // the hands close the gap while someone is writing a message
     if (scene === "hands") opts.pull = () => form.contains(document.activeElement);
     pieces.push(plate(canvas, scene, opts));

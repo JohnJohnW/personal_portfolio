@@ -229,12 +229,12 @@ canvas {
   position: relative;
 }
 
+/* the name is drawn on the stage; this only reserves the space for it */
 .hero-name {
+  width: 100%;
+  max-width: 640px;
+  height: 30vh;
   margin: 14px 0 22px;
-  color: var(--fg);
-  font: 400 clamp(72px, 11vw, 176px) / 0.92 "Anton", var(--sans);
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
 }
 
 .lede {
@@ -730,6 +730,10 @@ canvas {
 
   .p-no {
     padding-top: 0;
+  }
+
+  .hero-name {
+    max-width: 360px;
   }
 
   .tools {
