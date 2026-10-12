@@ -627,11 +627,12 @@ canvas {
 /* footer and status bar */
 
 .foot {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 8px 24px;
-  padding: 28px var(--pad);
+  padding: 84px var(--pad) 28px;
   border-top: 1px solid var(--line);
   color: var(--dim);
   font: 400 13px/1.5 var(--mono);
@@ -639,6 +640,37 @@ canvas {
 
 .foot a {
   color: var(--dim);
+}
+
+.quote i {
+  margin-left: 1ch;
+  color: var(--faint);
+  font-style: normal;
+}
+
+/* a spider lets itself down from the footer's top edge and climbs back */
+.web {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 66px;
+  overflow: hidden;
+}
+
+.web pre {
+  margin: 0;
+  color: var(--dim);
+  font: 400 12px/13px var(--mono);
+  animation: abseil 11s ease-in-out infinite alternate;
+}
+
+@keyframes abseil {
+  from {
+    transform: translateY(-46px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .bar {
@@ -808,5 +840,9 @@ canvas {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .web pre {
+    animation: none;
   }
 }
