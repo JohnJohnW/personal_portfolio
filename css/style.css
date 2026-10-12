@@ -257,9 +257,10 @@ canvas {
   margin-top: 32px;
 }
 
+/* never much taller than it is wide, or the arm ends up small at the bottom of it */
 .hero-figure {
   width: 100%;
-  height: min(76svh, 720px);
+  height: min(76svh, 720px, 46vw);
   pointer-events: none;
 }
 
@@ -735,7 +736,7 @@ canvas {
   }
 
   .hero-figure {
-    height: min(52svh, 440px);
+    height: min(52svh, 440px, 92vw);
   }
 
   .hint,
