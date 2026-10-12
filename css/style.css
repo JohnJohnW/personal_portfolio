@@ -14,6 +14,16 @@
   --measure: 68ch;
 }
 
+:root[data-light] {
+  --bg: #ebebeb;
+  --fg: #0d0d0d;
+  --text: #2b2b2b;
+  --dim: #5a5a5a;
+  --faint: #9c9c9c;
+  --line: #c9c9c9;
+  --field: #f5f5f5;
+}
+
 *,
 *::before,
 *::after {
@@ -72,6 +82,11 @@ dd {
 ul,
 ol {
   list-style: none;
+}
+
+canvas {
+  display: block;
+  cursor: crosshair;
 }
 
 .sr {
@@ -190,10 +205,28 @@ ol {
 /* hero */
 
 .hero {
+  position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 64px);
   align-items: center;
   min-height: calc(100svh - var(--top) - var(--bar));
   padding: clamp(24px, 5vh, 56px) var(--pad);
+  overflow: hidden;
+}
+
+/* The stage covers the whole hero so loose characters can travel across it.
+   The figure itself is laid out by .hero-figure. */
+.hero-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-copy,
+.hero-figure {
+  position: relative;
 }
 
 .hero-name {
@@ -224,6 +257,23 @@ ol {
   margin-top: 32px;
 }
 
+.hero-figure {
+  width: 100%;
+  height: min(76svh, 720px);
+  pointer-events: none;
+}
+
+.hint {
+  position: absolute;
+  right: var(--pad);
+  bottom: 14px;
+  color: var(--faint);
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
 /* sections */
 
 .sec {
@@ -231,8 +281,16 @@ ol {
 }
 
 .sec-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: clamp(20px, 4vw, 64px);
+  align-items: end;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
+}
+
+.sec-head.plain {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .sec-head h2 {
@@ -246,6 +304,11 @@ ol {
 .sec-note {
   max-width: var(--measure);
   color: var(--dim);
+}
+
+.sec-head .plate {
+  width: 100%;
+  height: clamp(200px, 26vw, 320px);
 }
 
 /* work */
@@ -446,6 +509,12 @@ ol {
 
 /* contact */
 
+.plate.wide {
+  width: 100%;
+  height: clamp(180px, 24vw, 340px);
+  margin-top: 24px;
+}
+
 .contact {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
@@ -572,17 +641,55 @@ ol {
   white-space: nowrap;
 }
 
+.bar-keys {
+  display: flex;
+  gap: 3ch;
+  margin-left: auto;
+}
+
+.bar button {
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.bar button b {
+  color: var(--fg);
+  font-weight: 400;
+}
+
+.bar button:hover {
+  color: var(--fg);
+}
+
 .noscript {
   padding: 80px var(--pad);
 }
 
 @media (max-width: 900px) {
   .hero {
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
 
+  .hero-figure {
+    height: min(52svh, 440px);
+  }
+
+  .hint,
   .clock {
     display: none;
+  }
+
+  .sec-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sec-head .plate {
+    height: clamp(200px, 54vw, 320px);
   }
 
   .tools {
@@ -635,9 +742,17 @@ ol {
     gap: 32px;
   }
 
+  .plate.wide {
+    height: 150px;
+  }
+
   .bar {
     gap: 2ch;
     font-size: 11px;
+  }
+
+  .bar-keys {
+    gap: 2ch;
   }
 
   .bar-sec {

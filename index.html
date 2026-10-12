@@ -31,6 +31,7 @@
 
   <main>
     <section class="hero" id="top">
+      <canvas class="plate hero-stage" data-scene="arm" aria-hidden="true"></canvas>
       <div class="hero-copy">
         <p class="label">IT | Law</p>
         <h1 class="hero-name">John Wynter</h1>
@@ -41,6 +42,8 @@
           <a class="btn" href="#contact">Get in touch</a>
         </p>
       </div>
+      <div class="hero-figure" aria-hidden="true"></div>
+      <p class="hint" aria-hidden="true">move / hold to grab / scroll</p>
     </section>
 
     <section class="sec" id="work">
@@ -50,13 +53,14 @@
           <h2 data-scramble>Work</h2>
           <p class="sec-note" id="work-note"></p>
         </div>
+        <canvas class="plate" data-scene="bee" aria-hidden="true"></canvas>
       </div>
       <ol class="projects" id="projects"></ol>
       <button class="btn more" id="more" type="button"></button>
     </section>
 
     <section class="sec" id="toolkit">
-      <div class="sec-head">
+      <div class="sec-head plain">
         <div class="sec-title">
           <p class="label">02</p>
           <h2 data-scramble>Toolkit</h2>
@@ -73,6 +77,7 @@
           <h2 data-scramble>Experience</h2>
           <p class="sec-note">Roles, study and certification.</p>
         </div>
+        <canvas class="plate" data-scene="bird" aria-hidden="true"></canvas>
       </div>
       <ol class="roles" id="roles"></ol>
       <div class="study">
@@ -88,13 +93,14 @@
     </section>
 
     <section class="sec" id="contact">
-      <div class="sec-head">
+      <div class="sec-head plain">
         <div class="sec-title">
           <p class="label">04</p>
           <h2 data-scramble>Contact</h2>
           <p class="sec-note">Use the form, or email me directly.</p>
         </div>
       </div>
+      <canvas class="plate wide" data-scene="hands" aria-hidden="true"></canvas>
       <div class="contact">
         <form class="form" id="form">
           <label for="f-name">Name</label>
@@ -122,6 +128,11 @@
   <div class="bar">
     <span class="bar-pos" id="pos" aria-hidden="true">col 000 row 000</span>
     <span class="bar-sec" id="where" aria-hidden="true">00 top</span>
+    <span class="bar-keys">
+      <button type="button" data-set="ramp" title="Change the character set (R)">ramp: <b>standard</b></button>
+      <button type="button" data-set="light" title="Invert the colours (I)">invert: <b>off</b></button>
+      <button type="button" data-set="sound" title="Sound on or off (S)">sound: <b>on</b></button>
+    </span>
   </div>
 
   <noscript><p class="noscript">This page needs JavaScript to fill in its content. The short version: John Wynter, Law and IT at QUT, johnwynter55893@outlook.com, github.com/JohnJohnW.</p></noscript>
