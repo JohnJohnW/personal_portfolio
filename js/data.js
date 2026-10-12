@@ -261,6 +261,16 @@ export const certs = [
   },
 ];
 
+// The toolkit again, in Chinese, for the wind chimes at the foot of the page.
+// Names with no Chinese form are translated by what they mean or do.
+export const chimes = [
+  "蟒蛇", "类型脚本", "响应式界面", "全栈框架", "快速接口", "红宝石轨道", "顺风样式", "轻量数据库",
+  "云端数据库", "棱镜", "宏脚本", "工作流自动化", "双子座", "检索增强生成", "向量检索", "智能体",
+  "计算机视觉", "语音智能体", "反洗钱", "电子取证", "信息安全管理", "网络安全框架", "服务审计",
+  "通用数据保护条例", "支付卡数据安全", "基本八项", "中小企业安全", "开源情报", "蔚蓝云", "开放授权",
+  "网络图谱", "树莓派", "战术态势感知", "三维打印",
+];
+
 export const toolkit = [
   {
     group: "Build",

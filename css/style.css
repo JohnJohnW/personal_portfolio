@@ -613,6 +613,17 @@ canvas {
   text-underline-offset: 4px;
 }
 
+/* wind chimes */
+
+.interlude {
+  margin-top: clamp(56px, 10vh, 120px);
+}
+
+.threads {
+  width: 100%;
+  height: clamp(340px, 56vh, 600px);
+}
+
 /* footer and status bar */
 
 .foot {
@@ -746,6 +757,10 @@ canvas {
 
   .p-no {
     padding-top: 0;
+  }
+
+  .threads {
+    height: 360px;
   }
 
   .hero-name {

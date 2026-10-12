@@ -1,6 +1,7 @@
-import { me, projects, experience, education, certs, toolkit } from "./data.js";
+import { me, projects, experience, education, certs, toolkit, chimes } from "./data.js";
 import { settings, set, watch, RAMPS } from "./glyph.js";
 import { plate } from "./plate.js";
+import { strands } from "./strands.js";
 import { sketch } from "./sketches.js";
 import { nameplate } from "./name.js";
 
@@ -244,6 +245,8 @@ async function stage() {
     if (scene === "hands") opts.pull = () => form.contains(document.activeElement);
     pieces.push(plate(canvas, scene, opts));
   }
+
+  pieces.push(strands($(".threads"), chimes, still));
 
   for (const canvas of $$("canvas.plot")) pieces.push(sketch(canvas, canvas.dataset.kind, still));
 
