@@ -1,4 +1,9 @@
-import { me, projects, experience, education, certs, toolkit } from "./data.js";
+import { me, projects, experience, education, certs, toolkit, chimes } from "./data.js";
+import { settings, set, watch, RAMPS } from "./glyph.js";
+import { plate } from "./plate.js";
+import { strands } from "./strands.js";
+import { sketch } from "./sketches.js";
+import { nameplate } from "./name.js";
 
 const FORM_KEY = "e3f86196-c795-4d77-b6a4-b03183583b4d";
 const SHOWN = 8;
@@ -46,6 +51,7 @@ function project(p, i) {
 ${tags}
 ${links}
 </div>
+<canvas class="plot" data-kind="${p.sketch}" aria-hidden="true"></canvas>
 </li>`;
 }
 
@@ -66,9 +72,9 @@ function role(e) {
 
 function render() {
   const years = projects.map((p) => p.year);
-  $("#work-note").textContent = `${projects.length} projects, ${Math.min(...years)} to ${Math.max(...years)}. Security and compliance tooling, legal tech and hackathon builds.`;
-  $("#projects").innerHTML = projects.map(project).join("");
-  for (const li of $$("#projects .project")) {
+  $("#projects-note").textContent = `${projects.length} projects, ${Math.min(...years)} to ${Math.max(...years)}. Security and compliance tooling, legal tech and hackathon builds.`;
+  $("#project-list").innerHTML = projects.map(project).join("");
+  for (const li of $$("#project-list .project")) {
     li.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && scramble($(".p-title", li)));
   }
 
@@ -76,7 +82,7 @@ function render() {
   if (projects.length > SHOWN) {
     more.textContent = `Show all ${projects.length} projects`;
     more.addEventListener("click", () => {
-      const hidden = $$("#projects [hidden]");
+      const hidden = $$("#project-list [hidden]");
       hidden.forEach((li) => (li.hidden = false));
       more.hidden = true;
       // keep keyboard users where the new entries start
@@ -166,6 +172,34 @@ function chrome() {
   $$("[data-scramble]").forEach((h) => heads.observe(h));
 }
 
+function controls() {
+  const buttons = Object.fromEntries($$(".bar [data-set]").map((b) => [b.dataset.set, b]));
+  const names = Object.keys(RAMPS);
+  const actions = {
+    ramp: () => set("ramp", names[(names.indexOf(settings.ramp) + 1) % names.length]),
+    light: () => set("light", !settings.light),
+    sound: () => set("sound", !settings.sound),
+  };
+
+  watch((key, value) => {
+    $("b", buttons[key]).textContent = typeof value === "boolean" ? (value ? "on" : "off") : value;
+    if (key === "light") {
+      document.documentElement.toggleAttribute("data-light", value);
+      $('meta[name="theme-color"]').content = value ? "#ebebeb" : "#0b0b0b";
+    }
+  });
+
+  for (const [key, b] of Object.entries(buttons)) b.addEventListener("click", actions[key]);
+
+  window.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea, select")) return;
+    const k = e.key.toLowerCase();
+    if (k === "r") actions.ramp();
+    else if (k === "i") actions.light();
+    else if (k === "s") actions.sound();
+  });
+}
+
 function contact() {
   const form = $("#form");
   const status = $("#form-status");
@@ -192,6 +226,79 @@ function contact() {
   });
 }
 
+async function stage() {
+  // the glyph atlas is cut from the page font, so wait for it (briefly)
+  if (document.fonts) {
+    const wanted = Promise.all([document.fonts.load('12px "IBM Plex Mono"'), document.fonts.load('100px "Anton"', "JOHNWYTER")]);
+    await Promise.race([wanted, new Promise((r) => setTimeout(r, 1800))]).catch(() => {});
+  }
+
+  const form = $("#form");
+  const pieces = [];
+
+  for (const canvas of $$("canvas.plate")) {
+    const scene = canvas.dataset.scene;
+    const opts = { still };
+    // the arm shares a stage the size of the whole hero with the name
+    if (scene === "arm") Object.assign(opts, { box: $(".hero-figure"), scatter: true, overlay: nameplate($(".hero-name")) });
+    // the hands close the gap while someone is writing a message
+    if (scene === "hands") opts.pull = () => form.contains(document.activeElement);
+    pieces.push(plate(canvas, scene, opts));
+  }
+
+  pieces.push(strands($(".threads"), chimes, still));
+
+  for (const canvas of $$("canvas.plot")) pieces.push(sketch(canvas, canvas.dataset.kind, still));
+
+  // One drawing failing must not take the others down with it, so a piece
+  // that throws is reported once and then left alone.
+  const run = (p, t) => {
+    try {
+      p.frame(t);
+    } catch (err) {
+      p.on = false;
+      p.broken = true;
+      console.error(err);
+    }
+  };
+  const paint = (p) => run(p, performance.now() / 1000);
+  const find = (el) => pieces.find((p) => p.el === el);
+  const seen = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const p = find(e.target);
+        p.on = e.isIntersecting && !p.broken;
+        if (still && p.on) paint(p);
+      }
+    },
+    { rootMargin: "100px" }
+  );
+  const sized = new ResizeObserver((entries) => {
+    for (const e of entries) {
+      const p = find(e.target);
+      p.resize();
+      if (still) paint(p);
+    }
+  });
+  for (const p of pieces) {
+    p.resize();
+    seen.observe(p.el);
+    sized.observe(p.el);
+  }
+
+  if (still) {
+    watch(() => pieces.forEach((p) => p.on && paint(p)));
+    return;
+  }
+  const tick = (now) => {
+    for (const p of pieces) if (p.on) run(p, now / 1000);
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
 render();
 chrome();
+controls();
 contact();
+stage();

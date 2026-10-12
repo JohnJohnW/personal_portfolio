@@ -14,6 +14,16 @@
   --measure: 68ch;
 }
 
+:root[data-light] {
+  --bg: #ebebeb;
+  --fg: #0d0d0d;
+  --text: #2b2b2b;
+  --dim: #5a5a5a;
+  --faint: #9c9c9c;
+  --line: #c9c9c9;
+  --field: #f5f5f5;
+}
+
 *,
 *::before,
 *::after {
@@ -72,6 +82,11 @@ dd {
 ul,
 ol {
   list-style: none;
+}
+
+canvas {
+  display: block;
+  cursor: crosshair;
 }
 
 .sr {
@@ -190,18 +205,36 @@ ol {
 /* hero */
 
 .hero {
+  position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 64px);
   align-items: center;
   min-height: calc(100svh - var(--top) - var(--bar));
   padding: clamp(24px, 5vh, 56px) var(--pad);
+  overflow: hidden;
 }
 
+/* The stage covers the whole hero so loose characters can travel across it.
+   The figure itself is laid out by .hero-figure. */
+.hero-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-copy,
+.hero-figure {
+  position: relative;
+}
+
+/* the name is drawn on the stage; this only reserves the space for it */
 .hero-name {
+  width: 100%;
+  max-width: 640px;
+  height: 30vh;
   margin: 14px 0 22px;
-  color: var(--fg);
-  font: 400 clamp(72px, 11vw, 176px) / 0.92 "Anton", var(--sans);
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
 }
 
 .lede {
@@ -224,6 +257,24 @@ ol {
   margin-top: 32px;
 }
 
+/* never much taller than it is wide, or the arm ends up small at the bottom of it */
+.hero-figure {
+  width: 100%;
+  height: min(76svh, 720px, 46vw);
+  pointer-events: none;
+}
+
+.hint {
+  position: absolute;
+  right: var(--pad);
+  bottom: 14px;
+  color: var(--faint);
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
 /* sections */
 
 .sec {
@@ -231,8 +282,16 @@ ol {
 }
 
 .sec-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: clamp(20px, 4vw, 64px);
+  align-items: end;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
+}
+
+.sec-head.plain {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .sec-head h2 {
@@ -248,11 +307,16 @@ ol {
   color: var(--dim);
 }
 
-/* work */
+.sec-head .plate {
+  width: 100%;
+  height: clamp(200px, 26vw, 320px);
+}
+
+/* projects */
 
 .project {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-columns: 56px minmax(0, 1fr) 300px;
   gap: 8px clamp(16px, 3vw, 40px);
   padding: 30px 0;
   border-bottom: 1px solid var(--line);
@@ -309,6 +373,12 @@ ol {
   gap: 8px 24px;
   margin-top: 16px;
   font: 400 14px/1.4 var(--mono);
+}
+
+.plot {
+  width: 100%;
+  height: 156px;
+  border: 1px solid var(--line);
 }
 
 .more {
@@ -446,6 +516,12 @@ ol {
 
 /* contact */
 
+.plate.wide {
+  width: 100%;
+  height: clamp(180px, 24vw, 340px);
+  margin-top: 24px;
+}
+
 .contact {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
@@ -538,14 +614,26 @@ ol {
   text-underline-offset: 4px;
 }
 
+/* wind chimes */
+
+.interlude {
+  margin-top: clamp(56px, 10vh, 120px);
+}
+
+.threads {
+  width: 100%;
+  height: clamp(340px, 56vh, 600px);
+}
+
 /* footer and status bar */
 
 .foot {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 8px 24px;
-  padding: 28px var(--pad);
+  padding: 84px var(--pad) 28px;
   border-top: 1px solid var(--line);
   color: var(--dim);
   font: 400 13px/1.5 var(--mono);
@@ -553,6 +641,37 @@ ol {
 
 .foot a {
   color: var(--dim);
+}
+
+.quote i {
+  margin-left: 1ch;
+  color: var(--faint);
+  font-style: normal;
+}
+
+/* a spider lets itself down from the footer's top edge and climbs back */
+.web {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 66px;
+  overflow: hidden;
+}
+
+.web pre {
+  margin: 0;
+  color: var(--dim);
+  font: 400 12px/13px var(--mono);
+  animation: abseil 11s ease-in-out infinite alternate;
+}
+
+@keyframes abseil {
+  from {
+    transform: translateY(-46px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .bar {
@@ -572,17 +691,65 @@ ol {
   white-space: nowrap;
 }
 
+.bar-keys {
+  display: flex;
+  gap: 3ch;
+  margin-left: auto;
+}
+
+.bar button {
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.bar button b {
+  color: var(--fg);
+  font-weight: 400;
+}
+
+.bar button:hover {
+  color: var(--fg);
+}
+
 .noscript {
   padding: 80px var(--pad);
 }
 
+@media (max-width: 1000px) {
+  .project {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .plot {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
   .hero {
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
 
+  .hero-figure {
+    height: min(52svh, 440px, 92vw);
+  }
+
+  .hint,
   .clock {
     display: none;
+  }
+
+  .sec-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sec-head .plate {
+    height: clamp(200px, 54vw, 320px);
   }
 
   .tools {
@@ -625,6 +792,14 @@ ol {
     padding-top: 0;
   }
 
+  .threads {
+    height: 360px;
+  }
+
+  .hero-name {
+    max-width: 360px;
+  }
+
   .tools {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
@@ -635,9 +810,17 @@ ol {
     gap: 32px;
   }
 
+  .plate.wide {
+    height: 150px;
+  }
+
   .bar {
     gap: 2ch;
     font-size: 11px;
+  }
+
+  .bar-keys {
+    gap: 2ch;
   }
 
   .bar-sec {
@@ -658,5 +841,9 @@ ol {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .web pre {
+    animation: none;
   }
 }

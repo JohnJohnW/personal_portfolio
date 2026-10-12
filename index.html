@@ -16,14 +16,14 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <a class="skip" href="#work">Skip to work</a>
+  <a class="skip" href="#experience">Skip to content</a>
 
   <header class="top">
     <a class="mark" href="#top">John Wynter</a>
     <nav aria-label="Sections">
-      <a href="#work"><i>01</i>Work</a>
-      <a href="#toolkit"><i>02</i>Toolkit</a>
-      <a href="#experience"><i>03</i>Experience</a>
+      <a href="#experience"><i>01</i>Experience</a>
+      <a href="#projects"><i>02</i>Projects</a>
+      <a href="#toolkit"><i>03</i>Toolkit</a>
       <a href="#contact"><i>04</i>Contact</a>
     </nav>
     <span class="clock" title="Local time in Brisbane">BNE <time id="clock">--:--:--</time></span>
@@ -31,48 +31,29 @@
 
   <main>
     <section class="hero" id="top">
+      <canvas class="plate hero-stage" data-scene="arm" aria-hidden="true"></canvas>
       <div class="hero-copy">
         <p class="label">IT | Law</p>
-        <h1 class="hero-name">John Wynter</h1>
+        <h1 class="hero-name"><span class="sr">John Wynter</span></h1>
         <p class="lede">IT and Law student at QUT. I work across cyber security, software and automation, and I am getting into robotics.</p>
         <p class="meta">Brisbane, Queensland</p>
         <p class="actions">
-          <a class="btn primary" href="#work">View work</a>
+          <a class="btn primary" href="#projects">View projects</a>
           <a class="btn" href="#contact">Get in touch</a>
         </p>
       </div>
-    </section>
-
-    <section class="sec" id="work">
-      <div class="sec-head">
-        <div class="sec-title">
-          <p class="label">01</p>
-          <h2 data-scramble>Work</h2>
-          <p class="sec-note" id="work-note"></p>
-        </div>
-      </div>
-      <ol class="projects" id="projects"></ol>
-      <button class="btn more" id="more" type="button"></button>
-    </section>
-
-    <section class="sec" id="toolkit">
-      <div class="sec-head">
-        <div class="sec-title">
-          <p class="label">02</p>
-          <h2 data-scramble>Toolkit</h2>
-          <p class="sec-note">What I have built and worked with.</p>
-        </div>
-      </div>
-      <dl class="tools" id="tools"></dl>
+      <div class="hero-figure" aria-hidden="true"></div>
+      <p class="hint" aria-hidden="true">move / hold to grab / scroll</p>
     </section>
 
     <section class="sec" id="experience">
       <div class="sec-head">
         <div class="sec-title">
-          <p class="label">03</p>
+          <p class="label">01</p>
           <h2 data-scramble>Experience</h2>
           <p class="sec-note">Roles, study and certification.</p>
         </div>
+        <canvas class="plate" data-scene="bird" aria-hidden="true"></canvas>
       </div>
       <ol class="roles" id="roles"></ol>
       <div class="study">
@@ -87,14 +68,39 @@
       </div>
     </section>
 
-    <section class="sec" id="contact">
+    <section class="sec" id="projects">
       <div class="sec-head">
+        <div class="sec-title">
+          <p class="label">02</p>
+          <h2 data-scramble>Projects</h2>
+          <p class="sec-note" id="projects-note"></p>
+        </div>
+        <canvas class="plate" data-scene="bee" aria-hidden="true"></canvas>
+      </div>
+      <ol class="projects" id="project-list"></ol>
+      <button class="btn more" id="more" type="button"></button>
+    </section>
+
+    <section class="sec" id="toolkit">
+      <div class="sec-head plain">
+        <div class="sec-title">
+          <p class="label">03</p>
+          <h2 data-scramble>Toolkit</h2>
+          <p class="sec-note">What I have built and worked with.</p>
+        </div>
+      </div>
+      <dl class="tools" id="tools"></dl>
+    </section>
+
+    <section class="sec" id="contact">
+      <div class="sec-head plain">
         <div class="sec-title">
           <p class="label">04</p>
           <h2 data-scramble>Contact</h2>
           <p class="sec-note">Use the form, or email me directly.</p>
         </div>
       </div>
+      <canvas class="plate wide" data-scene="hands" aria-hidden="true"></canvas>
       <div class="contact">
         <form class="form" id="form">
           <label for="f-name">Name</label>
@@ -114,14 +120,29 @@
     </section>
   </main>
 
+  <div class="interlude" aria-hidden="true">
+    <canvas class="threads"></canvas>
+  </div>
+
   <footer class="foot">
+    <div class="web" aria-hidden="true"><pre>     |
+     |
+     |
+     |
+ //\(oo)/\\</pre></div>
     <span>&copy; <span id="year">2026</span> John Wynter</span>
+    <span class="quote">"With great power comes great responsibility." <i>Spider-Man</i></span>
     <a href="#top">Back to top</a>
   </footer>
 
   <div class="bar">
     <span class="bar-pos" id="pos" aria-hidden="true">col 000 row 000</span>
     <span class="bar-sec" id="where" aria-hidden="true">00 top</span>
+    <span class="bar-keys">
+      <button type="button" data-set="ramp" title="Change the character set (R)">ramp: <b>standard</b></button>
+      <button type="button" data-set="light" title="Invert the colours (I)">invert: <b>off</b></button>
+      <button type="button" data-set="sound" title="Sound on or off (S)">sound: <b>on</b></button>
+    </span>
   </div>
 
   <noscript><p class="noscript">This page needs JavaScript to fill in its content. The short version: John Wynter, Law and IT at QUT, johnwynter55893@outlook.com, github.com/JohnJohnW.</p></noscript>

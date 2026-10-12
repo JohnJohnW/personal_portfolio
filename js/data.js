@@ -12,6 +12,7 @@ export const me = {
 export const projects = [
   {
     title: "UQ JATL Alt+Law Website",
+    sketch: "pathways",
     year: 2026,
     desc: "Paid commission for the UQ Justice and the Law Society (JATL): a student-led careers guide showcasing the breadth of legal practice beyond commercial clerkships, featuring practitioner interviews, alternative legal pathways, and mentorship resources. Sponsored by the College of Law and hosted at altlawuqjatl.com.",
     links: [{ label: "live", href: "https://altlawuqjatl.com/" }],
@@ -19,6 +20,7 @@ export const projects = [
   },
   {
     title: "STRATUM",
+    sketch: "graph",
     year: 2026,
     desc: "AML/CTF Tranche 2 compliance tool that cross-references ASIC extracts, company constitutions, and shareholder registers to detect undisclosed beneficial ownership. Uploads and parses corporate documents with Gemini, flags contradictions across them (e.g. nominee shareholders, unauthorised share classes, governance inconsistencies), and renders a live ownership graph with matched AUSTRAC/FATF typologies.",
     links: [
@@ -29,6 +31,7 @@ export const projects = [
   },
   {
     title: "Audit Trail",
+    sketch: "audit",
     year: 2026,
     desc: "SaaS compliance automation platform that maps GitHub repository activity to audit-ready evidence across 8 major frameworks including ISO 27001, SOC 2, GDPR, NIST CSF, and PCI DSS. Connects via GitHub OAuth (read-only metadata only), scores 63 controls automatically, and provides a live gap analysis dashboard, continuous monitoring alerts, and a shareable auditor portal with PDF/CSV export.",
     links: [
@@ -39,6 +42,7 @@ export const projects = [
   },
   {
     title: "QUT LITS Website",
+    sketch: "browser",
     year: 2025,
     desc: "Built and maintain the official website for the QUT Law, Innovation, Technology and Society club as VP of IT. Custom domain at qutlitsociety.com with animated backgrounds, interactive slideshow, and responsive design.",
     links: [
@@ -49,6 +53,7 @@ export const projects = [
   },
   {
     title: "Evidencia",
+    sketch: "timeline",
     year: 2025,
     desc: "Desktop eDiscovery software for managing litigation claims and their related documents. Features automatic date extraction from PDF, DOCX, EML, and MSG files, email chain separation with attachment processing, relationship tracking between documents and claims, and native file preservation with metadata intact.",
     links: [],
@@ -56,6 +61,7 @@ export const projects = [
   },
   {
     title: "PawOrNaw",
+    sketch: "paw",
     year: 2025,
     desc: "Tanda GenAI Hackathon project: Tinder-style dog matching app for breeding. Features swipe-based matching, real-time chat, and AI-powered profile creation to help dog owners find compatible breeding partners.",
     links: [
@@ -66,6 +72,7 @@ export const projects = [
   },
   {
     title: "LegalEase",
+    sketch: "layers",
     year: 2025,
     desc: "GovHack prototype (Brisbane, QLD): Legal-tech/GovTech tool that simplifies navigating regulations with citation provenance and layered jurisdictions to keep context and source traceability front-and-centre.",
     links: [
@@ -77,6 +84,7 @@ export const projects = [
   },
   {
     title: "The Sixth Man",
+    sketch: "scope",
     year: 2025,
     desc: "TAK Hack 2025 project: ATAK plugin using Raspberry Pi with camera and 3D printed casing for helmet/firearm attachment. Captures snapshots every 5 seconds, processes with local AI to identify people, hazards, and automatically places markers on ATAK map with HQ notifications.",
     links: [],
@@ -84,6 +92,7 @@ export const projects = [
   },
   {
     title: "ecoSure",
+    sketch: "habitat",
     year: 2025,
     desc: "Solo hackathon project for University of Queensland Sustainable Innovators Hackathon 2025: AI-powered environmental compliance tool for biodiversity and conservation projects. Cross-references project details against Queensland legislation and TERN datasets using RAG to flag compliance risks and biodiversity concerns.",
     links: [
@@ -95,6 +104,7 @@ export const projects = [
   },
   {
     title: "Cache to the Future",
+    sketch: "capsule",
     year: 2025,
     desc: "Team solution for QUT Code Network Winter Hackathon 2025: a digital time capsule that encrypts messages and provides time-based decryption keys, plus an on-site decryption tool for downloaded files.",
     links: [{ label: "repo", href: "https://github.com/mrjwei/cache-to-the-future" }],
@@ -102,6 +112,7 @@ export const projects = [
   },
   {
     title: "Federal Court Judgement Analysis",
+    sketch: "feed",
     year: 2025,
     desc: "Automated daily workflows involving analysis of the Federal Court judgements RSS feed using n8n and AI-agent integrations.",
     links: [],
@@ -109,6 +120,7 @@ export const projects = [
   },
   {
     title: "QITC Contract Automation",
+    sketch: "template",
     year: 2025,
     desc: "Automated the document generation process for QITC comprehensive contracts using VBA and Doxsera templates.",
     links: [],
@@ -116,6 +128,7 @@ export const projects = [
   },
   {
     title: "Telcom Compliance",
+    sketch: "tower",
     year: 2025,
     desc: "Static microsite with telecom compliance references. Lightweight demo resource and quick lookup tool.",
     links: [
@@ -126,6 +139,7 @@ export const projects = [
   },
   {
     title: "Contract Clause Library",
+    sketch: "shelf",
     year: 2025,
     desc: "Responsive online library of reusable contract clauses for quick reference and drafting by legal teams.",
     links: [
@@ -136,6 +150,7 @@ export const projects = [
   },
   {
     title: "MIT WIL Project Leadership (QUT)",
+    sketch: "erd",
     year: 2024,
     desc: "Organised and managed a WIL project for Masters IT students (Dundas Lawyers x QUT) involving an automated ERD program for forensic legal investigations using Python.",
     links: [],
@@ -143,6 +158,7 @@ export const projects = [
   },
   {
     title: "Forensic Investigation Automation",
+    sketch: "pulse",
     year: 2024,
     desc: "Developed a Python program to track availability/activity statuses of businesses during forensic legal investigations to inform legitimacy insights.",
     links: [],
@@ -243,6 +259,16 @@ export const certs = [
     org: "LinkedIn",
     when: "Sep 2024",
   },
+];
+
+// The toolkit again, in Chinese, for the wind chimes at the foot of the page.
+// Names with no Chinese form are translated by what they mean or do.
+export const chimes = [
+  "蟒蛇", "类型脚本", "响应式界面", "全栈框架", "快速接口", "红宝石轨道", "顺风样式", "轻量数据库",
+  "云端数据库", "棱镜", "宏脚本", "工作流自动化", "双子座", "检索增强生成", "向量检索", "智能体",
+  "计算机视觉", "语音智能体", "反洗钱", "电子取证", "信息安全管理", "网络安全框架", "服务审计",
+  "通用数据保护条例", "支付卡数据安全", "基本八项", "中小企业安全", "开源情报", "蔚蓝云", "开放授权",
+  "网络图谱", "树莓派", "战术态势感知", "三维打印",
 ];
 
 export const toolkit = [
