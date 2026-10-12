@@ -311,7 +311,7 @@ canvas {
   height: clamp(200px, 26vw, 320px);
 }
 
-/* work */
+/* projects */
 
 .project {
   display: grid;

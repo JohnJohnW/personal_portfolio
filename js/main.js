@@ -72,9 +72,9 @@ function role(e) {
 
 function render() {
   const years = projects.map((p) => p.year);
-  $("#work-note").textContent = `${projects.length} projects, ${Math.min(...years)} to ${Math.max(...years)}. Security and compliance tooling, legal tech and hackathon builds.`;
-  $("#projects").innerHTML = projects.map(project).join("");
-  for (const li of $$("#projects .project")) {
+  $("#projects-note").textContent = `${projects.length} projects, ${Math.min(...years)} to ${Math.max(...years)}. Security and compliance tooling, legal tech and hackathon builds.`;
+  $("#project-list").innerHTML = projects.map(project).join("");
+  for (const li of $$("#project-list .project")) {
     li.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && scramble($(".p-title", li)));
   }
 
@@ -82,7 +82,7 @@ function render() {
   if (projects.length > SHOWN) {
     more.textContent = `Show all ${projects.length} projects`;
     more.addEventListener("click", () => {
-      const hidden = $$("#projects [hidden]");
+      const hidden = $$("#project-list [hidden]");
       hidden.forEach((li) => (li.hidden = false));
       more.hidden = true;
       // keep keyboard users where the new entries start
