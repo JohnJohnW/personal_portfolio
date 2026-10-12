@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>John Wynter | IT + Law</title>
+  <meta name="description" content="John Wynter. IT and Law at QUT. Cyber security, software and automation. Brisbane, Australia.">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta property="og:title" content="John Wynter | IT + Law">
+  <meta property="og:description" content="Cyber security, software and automation. Brisbane, Australia.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#work">Skip to work</a>
+
+  <header class="top">
+    <a class="mark" href="#top">John Wynter</a>
+    <nav aria-label="Sections">
+      <a href="#work"><i>01</i>Work</a>
+      <a href="#toolkit"><i>02</i>Toolkit</a>
+      <a href="#experience"><i>03</i>Experience</a>
+      <a href="#contact"><i>04</i>Contact</a>
+    </nav>
+    <span class="clock" title="Local time in Brisbane">BNE <time id="clock">--:--:--</time></span>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="label">IT | Law</p>
+        <h1 class="hero-name">John Wynter</h1>
+        <p class="lede">IT and Law student at QUT. I work across cyber security, software and automation, and I am getting into robotics.</p>
+        <p class="meta">Brisbane, Queensland</p>
+        <p class="actions">
+          <a class="btn primary" href="#work">View work</a>
+          <a class="btn" href="#contact">Get in touch</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="sec" id="work">
+      <div class="sec-head">
+        <div class="sec-title">
+          <p class="label">01</p>
+          <h2 data-scramble>Work</h2>
+          <p class="sec-note" id="work-note"></p>
+        </div>
+      </div>
+      <ol class="projects" id="projects"></ol>
+      <button class="btn more" id="more" type="button"></button>
+    </section>
+
+    <section class="sec" id="toolkit">
+      <div class="sec-head">
+        <div class="sec-title">
+          <p class="label">02</p>
+          <h2 data-scramble>Toolkit</h2>
+          <p class="sec-note">What I have built and worked with.</p>
+        </div>
+      </div>
+      <dl class="tools" id="tools"></dl>
+    </section>
+
+    <section class="sec" id="experience">
+      <div class="sec-head">
+        <div class="sec-title">
+          <p class="label">03</p>
+          <h2 data-scramble>Experience</h2>
+          <p class="sec-note">Roles, study and certification.</p>
+        </div>
+      </div>
+      <ol class="roles" id="roles"></ol>
+      <div class="study">
+        <div>
+          <h3 class="label">Education</h3>
+          <ul class="roles" id="education"></ul>
+        </div>
+        <div>
+          <h3 class="label">Certification</h3>
+          <ul class="roles" id="certs"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="contact">
+      <div class="sec-head">
+        <div class="sec-title">
+          <p class="label">04</p>
+          <h2 data-scramble>Contact</h2>
+          <p class="sec-note">Use the form, or email me directly.</p>
+        </div>
+      </div>
+      <div class="contact">
+        <form class="form" id="form">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" autocomplete="name" required>
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+          <label for="f-message">Message</label>
+          <textarea id="f-message" name="message" rows="6" required></textarea>
+          <input type="checkbox" name="botcheck" class="sr" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="form-foot">
+            <button class="btn primary" type="submit">Send message</button>
+            <span id="form-status" role="status"></span>
+          </div>
+        </form>
+        <ul class="links" id="socials"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>&copy; <span id="year">2026</span> John Wynter</span>
+    <a href="#top">Back to top</a>
+  </footer>
+
+  <div class="bar">
+    <span class="bar-pos" id="pos" aria-hidden="true">col 000 row 000</span>
+    <span class="bar-sec" id="where" aria-hidden="true">00 top</span>
+  </div>
+
+  <noscript><p class="noscript">This page needs JavaScript to fill in its content. The short version: John Wynter, Law and IT at QUT, johnwynter55893@outlook.com, github.com/JohnJohnW.</p></noscript>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
