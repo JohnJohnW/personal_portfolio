@@ -12,8 +12,18 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <!-- the web fonts load on the side, so they never hold up the first paint -->
+  <link rel="stylesheet" id="fonts" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <link rel="modulepreload" href="js/main.js">
+  <link rel="modulepreload" href="js/data.js">
+  <link rel="modulepreload" href="js/glyph.js">
+  <link rel="modulepreload" href="js/plate.js">
+  <link rel="modulepreload" href="js/scenes.js">
+  <link rel="modulepreload" href="js/sound.js">
+  <link rel="modulepreload" href="js/name.js">
+  <link rel="modulepreload" href="js/sketches.js">
+  <link rel="modulepreload" href="js/strands.js">
 </head>
 <body>
   <a class="skip" href="#experience">Skip to content</a>
@@ -43,7 +53,7 @@
         </p>
       </div>
       <div class="hero-figure" aria-hidden="true"></div>
-      <p class="hint" aria-hidden="true">move / hold to grab / scroll</p>
+      <p class="hint" aria-hidden="true"><span class="by-mouse">move / hold to grab / scroll</span><span class="by-touch">tap to pick up / tap to put down</span></p>
     </section>
 
     <section class="sec" id="experience">

@@ -10,6 +10,8 @@ import { thud } from "./sound.js";
 // Nothing is read back to js, so a frame costs the main thread next to nothing.
 
 const LENS = 86;
+// seconds a figure takes to come together when it first appears
+const INTRO = 1.1;
 const DUST = [".", ",", ":", "`", "."].map(idx);
 const SCENE_UNIFORMS = ["uRes", "uAspect", "uFit", "uTime", "uAmt", "uLook", "uPose", "uObj"];
 const CELL_UNIFORMS = ["uGrid", "uOrigin", "uCell", "uView", "uDpr", "uSize", "uWide", "uSpread", "uFront", "uMouse", "uRing", "uLum", "uAtlas", "uRamp", "uGamma", "uGain", "uFade", "uTime", "uScan", "uInk"];
@@ -116,7 +118,7 @@ export function plate(canvas, name, opts = {}) {
   const out = { x: 0, y: 0, loose: false };
   const rings = new Float32Array(9);
   const grit = [];
-  const view = { wide: 1, tall: 1, u: 0, v: 0, over: false, down: false };
+  const view = { wide: 1, tall: 1, u: 0, v: 0, over: false, down: false, touch: false, taps: 0 };
 
   let cols = 0;
   let rows = 0;
@@ -131,6 +133,7 @@ export function plate(canvas, name, opts = {}) {
   let pose = [0, 0, 0, 0];
   let last = -1;
   let born = -1;
+  let shown = -1;
   let clock = 0;
   let sceneProg = null;
   let cellProg = null;
@@ -260,11 +263,16 @@ export function plate(canvas, name, opts = {}) {
   }
 
   function frame(t) {
-    if (!gl || !ready(sceneProg) || !ready(cellProg)) return;
+    if (!gl) return;
+    // The figure needs its shaders, and those can take a moment to compile.
+    // Anything drawn over it, like the name, does not, so that goes up first.
+    const whole = ready(sceneProg) && ready(cellProg);
+    if (!whole && !overlay) return;
     const dt = last < 0 ? 1 / 60 : Math.min(0.1, t - last);
     last = t;
     clock = t;
     if (born < 0) born = t;
+    if (whole && shown < 0) shown = t;
     measure();
     const tt = still ? 2 : t;
     const { cw, ch } = g;
@@ -287,8 +295,8 @@ export function plate(canvas, name, opts = {}) {
     lookY += (ty * scene.sway[1] - lookY) * ease;
     const want = !still && (onFigure || (pull && pull())) ? 1 : 0;
     amt += (want - amt) * Math.min(1, dt * 2.2);
-    if (scene.drive) {
-      Object.assign(view, { wide: aspect * fit, tall: fit, u, v, over, down: mouse.down });
+    if (scene.drive && whole) {
+      Object.assign(view, { wide: aspect * fit, tall: fit, u, v, over, down: mouse.down, touch: mouse.touch, taps: mouse.taps });
       pose = scene.drive(drive, tt, dt, view, still);
     }
 
@@ -307,11 +315,15 @@ export function plate(canvas, name, opts = {}) {
     // 0 when the figure is whole, 1 when its characters are fully blown apart
     let spread = 0;
     let front = rows + 6;
+    // the same for what is drawn over it, which may well have got here first
+    let loose = 0;
     if (!still) {
-      const age = (t - born) / 1.7;
-      if (scatter) spread = age < 1 ? (1 - age) * (1 - age) * (1 - age) : 0;
+      const burst = (age) => (age < 1 ? (1 - age) * (1 - age) * (1 - age) : 0);
+      const age = whole ? (t - shown) / INTRO : 0;
+      if (scatter) spread = burst(age);
       // smaller figures print in from the top instead
       else front = clamp(age * 1.4, 0, 1) * (rows + 6);
+      if (scatter) loose = burst((t - born) / INTRO);
     }
     const fade = 1 - spread;
     while (ripples.length && t - ripples[0].t > 1.1) ripples.shift();
@@ -322,69 +334,71 @@ export function plate(canvas, name, opts = {}) {
       rings[i * 3 + 2] = rp ? t - rp.t : -1;
     }
 
-    // pass 1: the scene, into its texture
-    gl.disable(gl.BLEND);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
-    gl.viewport(0, 0, cols * 2, rows * 2);
-    gl.useProgram(sceneProg.p);
-    gl.bindBuffer(gl.ARRAY_BUFFER, target.quad);
-    gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
-    gl.uniform2f(sceneProg.uRes, cols * 2, rows * 2);
-    gl.uniform1f(sceneProg.uAspect, aspect);
-    gl.uniform1f(sceneProg.uFit, fit);
-    gl.uniform1f(sceneProg.uTime, tt);
-    gl.uniform1f(sceneProg.uAmt, amt);
-    gl.uniform2f(sceneProg.uLook, lookX, lookY);
-    gl.uniform4f(sceneProg.uPose, pose[0], pose[1], pose[2], pose[3]);
-    if (drive.objs) gl.uniform3fv(sceneProg.uObj, drive.objs);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (whole) {
+      // pass 1: the scene, into its texture
+      gl.disable(gl.BLEND);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
+      gl.viewport(0, 0, cols * 2, rows * 2);
+      gl.useProgram(sceneProg.p);
+      gl.bindBuffer(gl.ARRAY_BUFFER, target.quad);
+      gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
+      gl.uniform2f(sceneProg.uRes, cols * 2, rows * 2);
+      gl.uniform1f(sceneProg.uAspect, aspect);
+      gl.uniform1f(sceneProg.uFit, fit);
+      gl.uniform1f(sceneProg.uTime, tt);
+      gl.uniform1f(sceneProg.uAmt, amt);
+      gl.uniform2f(sceneProg.uLook, lookX, lookY);
+      gl.uniform4f(sceneProg.uPose, pose[0], pose[1], pose[2], pose[3]);
+      if (drive.objs) gl.uniform3fv(sceneProg.uObj, drive.objs);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-    // pass 2: one sprite per cell
-    if (rampFor !== rampTable()) {
-      rampFor = rampTable();
-      const bytes = new Uint8Array(256 * 4);
-      for (let i = 0; i < 256; i++) bytes[i * 4] = rampFor[i];
+      // pass 2: one sprite per cell
+      if (rampFor !== rampTable()) {
+        rampFor = rampTable();
+        const bytes = new Uint8Array(256 * 4);
+        for (let i = 0; i < 256; i++) bytes[i * 4] = rampFor[i];
+        gl.activeTexture(gl.TEXTURE2);
+        gl.bindTexture(gl.TEXTURE_2D, ramp);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 256, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
+      }
+      const sheet = g.atlas();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.enable(gl.BLEND);
+      gl.useProgram(cellProg.p);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, sheet.tex);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, target.tex);
       gl.activeTexture(gl.TEXTURE2);
       gl.bindTexture(gl.TEXTURE_2D, ramp);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 256, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
+      gl.bindBuffer(gl.ARRAY_BUFFER, cells);
+      gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
+      gl.uniform2f(cellProg.uGrid, cols, rows);
+      gl.uniform2f(cellProg.uOrigin, fx, fy);
+      gl.uniform2f(cellProg.uCell, cw, ch);
+      gl.uniform2f(cellProg.uView, canvas.width, canvas.height);
+      gl.uniform1f(cellProg.uDpr, g.dpr);
+      gl.uniform1f(cellProg.uSize, sheet.gh);
+      gl.uniform1f(cellProg.uWide, sheet.gw / sheet.gh);
+      gl.uniform1f(cellProg.uSpread, spread);
+      gl.uniform1f(cellProg.uFront, front);
+      // a figure that chases the cursor would only ever be pushing itself out of the way
+      gl.uniform3f(cellProg.uMouse, mx, my, over && !scene.drive ? 1 : 0);
+      gl.uniform3fv(cellProg.uRing, rings);
+      gl.uniform1i(cellProg.uAtlas, 0);
+      gl.uniform1i(cellProg.uLum, 1);
+      gl.uniform1i(cellProg.uRamp, 2);
+      gl.uniform1f(cellProg.uGamma, scene.gamma);
+      gl.uniform1f(cellProg.uGain, scene.gain);
+      gl.uniform1f(cellProg.uFade, fade);
+      gl.uniform1f(cellProg.uTime, tt);
+      gl.uniform1f(cellProg.uScan, (((tt * 0.14) % 1.6) - 0.3) * rows * ch + fy);
+      gl.uniform3f(cellProg.uInk, g.ink(), g.ink(), g.ink());
+      gl.drawArrays(gl.POINTS, 0, cols * rows);
     }
-    const sheet = g.atlas();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.enable(gl.BLEND);
-    gl.useProgram(cellProg.p);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, sheet.tex);
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, target.tex);
-    gl.activeTexture(gl.TEXTURE2);
-    gl.bindTexture(gl.TEXTURE_2D, ramp);
-    gl.bindBuffer(gl.ARRAY_BUFFER, cells);
-    gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
-    gl.uniform2f(cellProg.uGrid, cols, rows);
-    gl.uniform2f(cellProg.uOrigin, fx, fy);
-    gl.uniform2f(cellProg.uCell, cw, ch);
-    gl.uniform2f(cellProg.uView, canvas.width, canvas.height);
-    gl.uniform1f(cellProg.uDpr, g.dpr);
-    gl.uniform1f(cellProg.uSize, sheet.gh);
-    gl.uniform1f(cellProg.uWide, sheet.gw / sheet.gh);
-    gl.uniform1f(cellProg.uSpread, spread);
-    gl.uniform1f(cellProg.uFront, front);
-    // a figure that chases the cursor would only ever be pushing itself out of the way
-    gl.uniform3f(cellProg.uMouse, mx, my, over && !scene.drive ? 1 : 0);
-    gl.uniform3fv(cellProg.uRing, rings);
-    gl.uniform1i(cellProg.uAtlas, 0);
-    gl.uniform1i(cellProg.uLum, 1);
-    gl.uniform1i(cellProg.uRamp, 2);
-    gl.uniform1f(cellProg.uGamma, scene.gamma);
-    gl.uniform1f(cellProg.uGain, scene.gain);
-    gl.uniform1f(cellProg.uFade, fade);
-    gl.uniform1f(cellProg.uTime, tt);
-    gl.uniform1f(cellProg.uScan, (((tt * 0.14) % 1.6) - 0.3) * rows * ch + fy);
-    gl.uniform3f(cellProg.uInk, g.ink(), g.ink(), g.ink());
-    gl.drawArrays(gl.POINTS, 0, cols * rows);
 
     // everything else goes through the ordinary sprite batch on top
     g.clear();
@@ -421,10 +435,11 @@ export function plate(canvas, name, opts = {}) {
         o.x = x;
         o.y = y;
       };
-      overlay.draw(g, still ? 0 : t, { spread, fade, warp, out });
+      overlay.draw(g, still ? 0 : t, { spread: loose, fade: 1 - loose, warp, out });
     }
 
-    if (scene.labels && spread < 0.15 && front > rows) {
+    // the readout is too small to read at a phone's character size
+    if (whole && scene.labels && g.px >= 7 && spread < 0.15 && front > rows) {
       for (const [text, P] of scene.labels(pose, tt)) {
         const [lu, lv] = P.length === 2 ? P : project(P);
         const col = Math.round(lu * cols - text.length / 2);
@@ -444,7 +459,7 @@ export function plate(canvas, name, opts = {}) {
     for (const [x, y, a, b] of motes) {
       g.put(DUST[(a * DUST.length) | 0], x + 9 * Math.sin(md * 0.21 + a * 40), y + 7 * Math.cos(md * 0.17 + b * 31), 0.1 + 0.22 * b);
     }
-    g.flush(true);
+    g.flush(whole);
   }
 
   // a click sends a ring out through the characters

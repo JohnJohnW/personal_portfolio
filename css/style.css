@@ -275,6 +275,21 @@ canvas {
   pointer-events: none;
 }
 
+/* it says what a mouse can do, or what a finger can */
+.hint .by-touch {
+  display: none;
+}
+
+@media (hover: none) {
+  .hint .by-mouse {
+    display: none;
+  }
+
+  .hint .by-touch {
+    display: inline;
+  }
+}
+
 /* sections */
 
 .sec {
@@ -412,6 +427,10 @@ canvas {
   font: 400 15px/1.9 var(--mono);
 }
 
+.tools dd span {
+  display: block;
+}
+
 /* experience */
 
 .role {
@@ -496,6 +515,11 @@ canvas {
 .r-sub p {
   max-width: var(--measure);
   margin-top: 4px;
+}
+
+/* the detail of a role only folds away on a phone, so the toggle hides here */
+.r-more > summary {
+  display: none;
 }
 
 .study {
@@ -724,22 +748,35 @@ canvas {
     grid-template-columns: 56px minmax(0, 1fr);
   }
 
+  /* the sketch drops under the text it belongs to */
   .plot {
-    display: none;
+    grid-column: 2;
+    max-width: 300px;
+    margin-top: 10px;
   }
 }
 
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(230px, 1fr);
     align-items: start;
   }
 
+  /* the figure takes what is left of the first screen, so the arm is in view
+     without scrolling */
   .hero-figure {
-    height: min(52svh, 440px, 92vw);
+    align-self: stretch;
+    height: auto;
+    max-height: 92vw;
   }
 
-  .hint,
+  .hint {
+    right: 0;
+    left: 0;
+    text-align: center;
+  }
+
   .clock {
     display: none;
   }
@@ -774,6 +811,22 @@ canvas {
     gap: 14px;
   }
 
+  /* the words close up a little, which leaves the arm more of the first screen */
+  .hero {
+    gap: 8px;
+    padding-top: 20px;
+    padding-bottom: 44px;
+  }
+
+  .hero-name {
+    max-width: 360px;
+    margin: 8px 0 14px;
+  }
+
+  .actions {
+    margin-top: 20px;
+  }
+
   .top nav {
     gap: 14px;
     font-size: 13px;
@@ -792,17 +845,54 @@ canvas {
     padding-top: 0;
   }
 
-  .threads {
-    height: 360px;
+  .plot {
+    grid-column: 1;
   }
 
-  .hero-name {
-    max-width: 360px;
+  .threads {
+    height: 360px;
   }
 
   .tools {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
+  }
+
+  /* each group runs on as a line of text, not a column down the screen */
+  .tools dd {
+    line-height: 1.75;
+  }
+
+  .tools dd span {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  .tools dd span:not(:last-child)::after {
+    content: " /";
+    color: var(--faint);
+  }
+
+  .r-more > summary {
+    display: block;
+    padding: 10px 0 2px;
+    color: var(--dim);
+    font: 400 13px/1.4 var(--mono);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .r-more > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .r-more > summary::before {
+    content: "[+] ";
+    color: var(--faint);
+  }
+
+  .r-more[open] > summary::before {
+    content: "[-] ";
   }
 
   .study {
@@ -835,6 +925,27 @@ canvas {
 
   .top nav a[href="#toolkit"] {
     display: none;
+  }
+}
+
+/* a finger needs more to aim at than a cursor does */
+@media (pointer: coarse) {
+  :root {
+    --bar: 40px;
+  }
+
+  .mark,
+  .top nav a {
+    padding: 12px 0;
+  }
+
+  .p-links a,
+  .foot a {
+    padding: 8px 0;
+  }
+
+  .bar button {
+    padding: 11px 0;
   }
 }
 
