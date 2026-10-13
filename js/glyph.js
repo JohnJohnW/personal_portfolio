@@ -252,7 +252,12 @@ export function grid(canvas, size, opts = {}) {
 
 // Where the pointer is in window coordinates, and how fast it is moving.
 // It sits far off screen when there is no pointer.
-export const mouse = { x: -1e4, y: -1e4, vx: 0, vy: 0, at: 0, down: false };
+// touch is true when the last thing heard from was a finger, and taps counts them.
+export const mouse = { x: -1e4, y: -1e4, vx: 0, vy: 0, at: 0, down: false, touch: false, taps: 0 };
+
+// how long a tapped spot stays live, in ms
+const LINGER = 4000;
+let leaving = 0;
 
 const away = () => {
   mouse.x = mouse.y = -1e4;
@@ -273,15 +278,45 @@ const track = (e) => {
   mouse.at = now;
 };
 
-window.addEventListener("pointermove", track, { passive: true });
-window.addEventListener("pointerdown", track, { passive: true });
-// a lifted finger should not keep pushing things around
-window.addEventListener("pointerup", (e) => e.pointerType !== "mouse" && away(), { passive: true });
-window.addEventListener("pointercancel", away, { passive: true });
-document.documentElement.addEventListener("pointerleave", away);
-window.addEventListener("pointerdown", () => (mouse.down = true), { passive: true });
-window.addEventListener("pointerup", () => (mouse.down = false), { passive: true });
+// A finger is not a cursor. Putting one down may be the start of a scroll, so
+// nothing follows it. A tap counts once the finger comes back up, and the spot
+// it touched stays live for a few seconds so things have time to react.
+const finger = (e) => e.pointerType !== "mouse";
+
+window.addEventListener(
+  "pointermove",
+  (e) => {
+    if (finger(e)) return;
+    clearTimeout(leaving);
+    mouse.touch = false;
+    track(e);
+  },
+  { passive: true }
+);
+window.addEventListener(
+  "pointerdown",
+  (e) => {
+    if (finger(e)) return;
+    track(e);
+    mouse.down = true;
+  },
+  { passive: true }
+);
+window.addEventListener(
+  "pointerup",
+  (e) => {
+    mouse.down = false;
+    if (!finger(e)) return;
+    clearTimeout(leaving);
+    track(e);
+    mouse.touch = true;
+    mouse.taps++;
+    leaving = setTimeout(away, LINGER);
+  },
+  { passive: true }
+);
 window.addEventListener("pointercancel", () => (mouse.down = false), { passive: true });
+document.documentElement.addEventListener("pointerleave", (e) => finger(e) || away());
 
 // pointer velocity, fading out once it stops moving
 export function drift() {

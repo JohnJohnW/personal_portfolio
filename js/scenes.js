@@ -415,7 +415,8 @@ function settle(s, dt) {
 // What the arm does when nobody is driving: pick something, go over it, come
 // down, take hold, carry it somewhere else and let go.
 function routine(s, t) {
-  const j = s.job || (s.job = { step: 0, until: t + 1.5, x: s.gx, y: s.gy });
+  // left holding something, it finishes the job: carries it off and puts it down
+  const j = s.job || (s.job = s.held ? { step: 3, until: t, thing: s.held } : { step: 0, until: t + 1.5, x: s.gx, y: s.gy });
   const reached = (x, y, slack) => Math.hypot(s.gx - x, s.gy - y) < slack || t > j.until;
   const next = (step, wait) => {
     j.step = step;
@@ -463,7 +464,8 @@ function routine(s, t) {
 }
 
 // view is the frame the arm is drawn in: how many scene units wide and tall
-// it is, where the cursor is across it, and whether the button is down.
+// it is, where the pointer is across it, whether the button is down, and for
+// a finger, how many taps there have been.
 function follow(s, t, dt, view, still) {
   if (!s.things) {
     Object.assign(s, { phi: 0.9, b: -flex(1.9), side: 1, from: 0, g: 0.6, gx: 1.69, gy: 0.46, held: null, job: null, hits: [] });
@@ -485,6 +487,23 @@ function follow(s, t, dt, view, still) {
     s.job = null;
   } else {
     [tx, ty, closed] = still ? [1.5, 0.6, false] : routine(s, t);
+  }
+
+  const dx = within(tx - SHOULDER[0], -wall, wall);
+  const dy = Math.max(ty - SHOULDER[1], DROP);
+  const rad = within(Math.hypot(dx, dy), NEAR, REACH);
+  const phi = within(Math.atan2(dx, dy), -fan(rad), fan(rad));
+
+  // A finger cannot hold a button down, so a tap is an order instead: go
+  // there and take what is there or, with something already in hand, carry
+  // it there and put it down.
+  if (view.over && view.touch && !still) {
+    if (view.taps !== s.taps) {
+      s.taps = view.taps;
+      s.put = !!s.held;
+    }
+    const there = Math.abs(s.phi - phi) < 0.06 && Math.abs(span(s.b) - rad) < 0.1;
+    closed = s.put ? !there : there || !!s.held;
   }
 
   // Closing on something takes hold of it, opening lets it go. It does not
@@ -516,10 +535,6 @@ function follow(s, t, dt, view, still) {
 
   // a heavy load slows every joint down
   const strain = 1 / (1 + (s.held ? s.held.kind.mass : 0) * 0.12);
-  const dx = within(tx - SHOULDER[0], -wall, wall);
-  const dy = Math.max(ty - SHOULDER[1], DROP);
-  const rad = within(Math.hypot(dx, dy), NEAR, REACH);
-  const phi = within(Math.atan2(dx, dy), -fan(rad), fan(rad));
 
   // The elbow sits above the line from shoulder to hand, so it has to change
   // sides when the hand does. It only starts once the arm is inside the band
@@ -596,7 +611,7 @@ function follow(s, t, dt, view, still) {
   // the gripper closes on whatever it holds and no further, and a shut hand
   // opens again as it comes up to something it could take
   const gape = s.held ? within((s.held.kind.r - 0.03) / 0.15, 0, 1) : closed && !near ? 0 : 1;
-  s.g += (gape - s.g) * Math.min(1, dt * 9);
+  s.g = still ? gape : s.g + (gape - s.g) * Math.min(1, dt * 9);
   return [a, s.b, s.g, s.bench];
 }
 

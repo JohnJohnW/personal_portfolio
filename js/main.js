@@ -6,7 +6,8 @@ import { sketch } from "./sketches.js";
 import { nameplate } from "./name.js";
 
 const FORM_KEY = "e3f86196-c795-4d77-b6a4-b03183583b4d";
-const SHOWN = 8;
+// how many projects are listed before the rest are asked for; fewer on a phone
+const SHOWN = matchMedia("(max-width: 640px)").matches ? 5 : 8;
 const LINK_NAMES = { live: "Live site", repo: "Source", demo: "Demo", video: "Video", govhack: "GovHack page" };
 const NOISE = "/\\|-_=+*#<>[]";
 
@@ -55,19 +56,23 @@ ${links}
 </li>`;
 }
 
+// The detail of a role sits in a <details>. On a phone it folds away behind
+// its heading; on anything wider it is held open and the toggle is hidden.
+const fold = (inner) => (inner ? `<details class="r-more"><summary>details</summary>${inner}</details>` : "");
+
 function role(e) {
   if (e.roles) {
     const sub = e.roles
       .map((r) => `<li><h4>${esc(r.role)}<span>${r.when}</span></h4><p>${esc(r.note)}</p></li>`)
       .join("");
-    return `<li class="role"><p class="r-when">${e.when}</p><div><h3>${esc(e.org)}</h3><ul class="r-sub">${sub}</ul></div></li>`;
+    return `<li class="role"><p class="r-when">${e.when}</p><div><h3>${esc(e.org)}</h3>${fold(`<ul class="r-sub">${sub}</ul>`)}</div></li>`;
   }
   const detail = e.points
     ? `<ul class="r-points">${e.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`
     : e.note
       ? `<p class="r-note">${esc(e.note)}</p>`
       : "";
-  return `<li class="role"><p class="r-when">${e.when}</p><div><h3>${esc(e.role)}</h3><p class="r-org">${esc(e.org)}</p>${detail}</div></li>`;
+  return `<li class="role"><p class="r-when">${e.when}</p><div><h3>${esc(e.role)}</h3><p class="r-org">${esc(e.org)}</p>${fold(detail)}</div></li>`;
 }
 
 function render() {
@@ -94,10 +99,14 @@ function render() {
   }
 
   $("#tools").innerHTML = toolkit
-    .map((g) => `<div><dt>${esc(g.group)}</dt><dd>${g.items.map(esc).join("<br>")}</dd></div>`)
+    .map((g) => `<div><dt>${esc(g.group)}</dt><dd>${g.items.map((i) => `<span>${esc(i)}</span>`).join(" ")}</dd></div>`)
     .join("");
 
   $("#roles").innerHTML = experience.map(role).join("");
+  const phone = matchMedia("(max-width: 640px)");
+  const unfold = () => $$(".r-more").forEach((d, i) => (d.open = !phone.matches || i === 0));
+  phone.addEventListener("change", unfold);
+  unfold();
 
   $("#education").innerHTML = education
     .map((e) => `<li class="role"><div><h3>${esc(e.degree)}</h3><p class="r-org">${esc(e.org)}</p><p class="r-when">${e.when}</p></div></li>`)

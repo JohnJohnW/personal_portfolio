@@ -118,7 +118,7 @@ export function plate(canvas, name, opts = {}) {
   const out = { x: 0, y: 0, loose: false };
   const rings = new Float32Array(9);
   const grit = [];
-  const view = { wide: 1, tall: 1, u: 0, v: 0, over: false, down: false };
+  const view = { wide: 1, tall: 1, u: 0, v: 0, over: false, down: false, touch: false, taps: 0 };
 
   let cols = 0;
   let rows = 0;
@@ -296,7 +296,7 @@ export function plate(canvas, name, opts = {}) {
     const want = !still && (onFigure || (pull && pull())) ? 1 : 0;
     amt += (want - amt) * Math.min(1, dt * 2.2);
     if (scene.drive && whole) {
-      Object.assign(view, { wide: aspect * fit, tall: fit, u, v, over, down: mouse.down });
+      Object.assign(view, { wide: aspect * fit, tall: fit, u, v, over, down: mouse.down, touch: mouse.touch, taps: mouse.taps });
       pose = scene.drive(drive, tt, dt, view, still);
     }
 
@@ -438,7 +438,8 @@ export function plate(canvas, name, opts = {}) {
       overlay.draw(g, still ? 0 : t, { spread: loose, fade: 1 - loose, warp, out });
     }
 
-    if (whole && scene.labels && spread < 0.15 && front > rows) {
+    // the readout is too small to read at a phone's character size
+    if (whole && scene.labels && g.px >= 7 && spread < 0.15 && front > rows) {
       for (const [text, P] of scene.labels(pose, tt)) {
         const [lu, lv] = P.length === 2 ? P : project(P);
         const col = Math.round(lu * cols - text.length / 2);

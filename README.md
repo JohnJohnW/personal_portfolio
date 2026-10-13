@@ -20,9 +20,10 @@
 
 That is the arm from the top of the page, running the same code. On the site it
 follows your cursor. Hold the mouse button and it closes its gripper on whatever
-is under it, and letting go drops or throws it. The ball bounces, the ring
-rolls, and the steel block lands dead and makes the arm slower while it is
-carrying it.
+is under it, and letting go drops or throws it. On a phone, tap something and
+the arm goes and picks it up, then tap anywhere else and it carries it there and
+puts it down. The ball bounces, the ring rolls, and the steel block lands dead
+and makes the arm slower while it is carrying it.
 
 ## How a figure gets printed
 
