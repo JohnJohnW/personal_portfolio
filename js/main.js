@@ -226,15 +226,20 @@ function contact() {
   });
 }
 
-async function stage() {
-  // the glyph atlas is cut from the page font, so wait for it (briefly)
-  if (document.fonts) {
-    const wanted = Promise.all([document.fonts.load('12px "IBM Plex Mono"'), document.fonts.load('100px "Anton"', "JOHNWYTER")]);
-    await Promise.race([wanted, new Promise((r) => setTimeout(r, 1800))]).catch(() => {});
-  }
+// The fonts the drawings are cut from. Their stylesheet loads on the side, so
+// it has to have landed before the faces in it can be asked for.
+async function fonts() {
+  const sheet = $("#fonts");
+  if (sheet.media !== "all") await new Promise((done) => sheet.addEventListener("load", done, { once: true }));
+  await Promise.all([document.fonts.load('12px "IBM Plex Mono"'), document.fonts.load('100px "Anton"', "JOHNWYTER")]);
+}
 
+async function stage() {
   const form = $("#form");
   const pieces = [];
+
+  // Building a figure sets its shaders compiling, which is the slow part, so
+  // that starts now and runs while the fonts are still on their way.
 
   for (const canvas of $$("canvas.plate")) {
     const scene = canvas.dataset.scene;
@@ -249,6 +254,10 @@ async function stage() {
   pieces.push(strands($(".threads"), chimes, still));
 
   for (const canvas of $$("canvas.plot")) pieces.push(sketch(canvas, canvas.dataset.kind, still));
+
+  // The glyph sheets are cut from the page fonts, so nothing is sized or
+  // drawn until those are in, or have had long enough.
+  if (document.fonts) await Promise.race([fonts(), new Promise((r) => setTimeout(r, 1800))]).catch(() => {});
 
   // One drawing failing must not take the others down with it, so a piece
   // that throws is reported once and then left alone.
@@ -287,7 +296,15 @@ async function stage() {
   }
 
   if (still) {
-    watch(() => pieces.forEach((p) => p.on && paint(p)));
+    const all = () => pieces.forEach((p) => p.on && paint(p));
+    watch(all);
+    // a figure whose shaders were still compiling drew nothing the first
+    // time it was asked, so ask again for a few seconds
+    let asks = 0;
+    const again = setInterval(() => {
+      all();
+      if (++asks === 12) clearInterval(again);
+    }, 400);
     return;
   }
   const tick = (now) => {
