@@ -11,6 +11,14 @@ export const me = {
 
 export const projects = [
   {
+    title: "UN Global AI Hackathon",
+    sketch: "statute",
+    year: 2026,
+    desc: "Shortlisted to Round 1 of the UN Global Hackathon on Using AI for Digital Trade Regulatory Analysis, run by UN ESCAP and KMITL and judged by a panel from the UN, the WTO and the World Bank: one of 44 teams picked from 129 (417 people across 38 countries) on our concept video and technical memo. The brief: an open-source AI tool that takes over 80% of the research behind the UN's Regional Digital Trade Integration Index, tracking down a country's laws on hard-to-scrape government portals and scanned PDFs and mapping its rules on cross-border data flows and data protection to the index with article-level citations, leaving the last 20% to a human reviewer.",
+    links: [{ label: "UN ESCAP page", href: "https://www.unescap.org/events/2026/global-hackathon-using-ai-digital-trade-regulatory-analysis" }],
+    stack: ["AI", "Legal NLP", "RegTech", "Data protection", "Digital trade", "UN ESCAP"],
+  },
+  {
     title: "UQ JATL Alt+Law Website",
     sketch: "pathways",
     year: 2026,

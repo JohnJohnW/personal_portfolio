@@ -25,6 +25,48 @@ const SKETCHES = {
     s.put(14 + Math.floor(((t * 0.7) % 1) * 11), 1 + on * 2, ">", 1);
   },
 
+  // A statute read line by line. The provisions that matter land on the
+  // index's data pillars, 6 and 7, with the section they came from, and a
+  // person signs each one off.
+  statute(s, t) {
+    const page = ["Part 3 =======", "== ==== ======", "=== ====== ===", "==== == ======", "= ===== ======", "=== ==== === =", "====== == ===="];
+    const finds = [
+      { line: 2, sec: "s.26(1)", pillar: 6, what: "cross-border transfer" },
+      { line: 5, sec: "s.13(2)", pillar: 7, what: "consent to process" },
+    ];
+    const f = finds[Math.floor(t / 4) % finds.length];
+    // how far through reading this provision, 0 to 1
+    const p = (t % 4) / 4;
+    const read = Math.min(page.length - 1, Math.floor(p * 14));
+
+    s.put(0, 0, "+-- statute ---+", 0.6);
+    page.forEach((line, i) => {
+      const found = i === f.line && read >= i;
+      s.put(0, 1 + i, "|", 0.6);
+      s.put(1, 1 + i, found ? (f.sec + " " + line).slice(0, 14) : line, found ? 1 : i === read ? 0.8 : 0.3);
+      s.put(15, 1 + i, "|", 0.6);
+    });
+    s.put(0, 8, "+" + "-".repeat(14) + "+", 0.6);
+
+    // the provision travels across to its pillar
+    if (p > 0.45 && p < 0.62) {
+      const head = Math.floor(((p - 0.45) / 0.17) * 6);
+      s.put(17, 1 + f.line, "-".repeat(head) + ">", 0.9);
+    }
+
+    s.put(25, 0, "RDTII pillars", 0.6);
+    for (let i = 0; i < 12; i++) {
+      const n = String(i + 1).padStart(2, "0");
+      const lit = p >= 0.62 && i + 1 === f.pillar;
+      const ours = i === 5 || i === 6;
+      s.put(25 + (i % 4) * 5, 2 + Math.floor(i / 4) * 2, lit ? "[" + n + "]" : " " + n + " ", lit ? 1 : ours ? 0.6 : 0.3);
+    }
+
+    if (p >= 0.62) s.put(0, 10, "cite " + f.sec + " -> P" + f.pillar + " " + f.what, 0.9);
+    if (p >= 0.8) s.put(0, 11, "[review]", 1);
+    s.put(p >= 0.8 ? 9 : 0, 11, p >= 0.8 ? "signed off" : "80% by the tool, 20% by a person", p >= 0.8 ? blink(t, 3) : 0.35);
+  },
+
   // an ownership chart with one holder that does not add up
   graph(s, t) {
     const hot = blink(t, 1.5);
