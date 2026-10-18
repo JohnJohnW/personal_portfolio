@@ -269,14 +269,50 @@ export const certs = [
   },
 ];
 
-// The toolkit again, in Chinese, for the wind chimes at the foot of the page.
-// Names with no Chinese form are translated by what they mean or do.
+// The toolkit again, in Chinese, for the wind chimes at the foot of the page,
+// one entry per toolkit item and in the same order. Each is written the way a
+// Chinese reader would know it: by its Chinese name where it has one, and
+// otherwise by what it is, since most of these products only go by their
+// English names.
 export const chimes = [
-  "蟒蛇", "类型脚本", "响应式界面", "全栈框架", "快速接口", "红宝石轨道", "顺风样式", "轻量数据库",
-  "云端数据库", "棱镜", "宏脚本", "工作流自动化", "双子座", "检索增强生成", "向量检索", "智能体",
-  "计算机视觉", "语音智能体", "反洗钱", "电子取证", "信息安全管理", "网络安全框架", "服务审计",
-  "通用数据保护条例", "支付卡数据安全", "基本八项", "中小企业安全", "开源情报", "蔚蓝云", "开放授权",
-  "网络图谱", "树莓派", "战术态势感知", "三维打印",
+  // Build
+  "通用编程语言", // Python
+  "静态类型脚本语言", // TypeScript
+  "组件化界面库", // React
+  "全栈网页框架", // Next.js
+  "高性能接口框架", // FastAPI
+  "敏捷网页开发框架", // Ruby on Rails
+  "原子化样式框架", // Tailwind CSS
+  "嵌入式数据库", // SQLite
+  "开源后端即服务", // Supabase
+  "对象关系映射", // Prisma
+  "办公自动化宏", // VBA
+  "工作流自动化", // n8n
+  // AI
+  "谷歌大模型", // Gemini
+  "检索增强生成", // RAG
+  "向量相似度检索", // FAISS
+  "智能体", // AI agents
+  "计算机视觉", // Computer vision
+  "语音智能体", // ElevenLabs Agents
+  // Law and compliance
+  "反洗钱与反恐怖融资", // AML/CTF
+  "电子证据开示", // eDiscovery
+  "信息安全管理体系", // ISO 27001
+  "美国网络安全框架", // NIST CSF
+  "服务组织控制报告", // SOC 2
+  "通用数据保护条例", // GDPR
+  "支付卡行业数据安全标准", // PCI DSS
+  "八项基本缓解策略", // ACSC Essential Eight
+  "中小企业网络安全认证", // SMB1001
+  "开源情报", // OSINT
+  // Other
+  "微软云基础认证", // Azure (AZ-900)
+  "开放授权登录", // GitHub OAuth
+  "网络图可视化", // Cytoscape.js
+  "树莓派", // Raspberry Pi
+  "战术态势感知", // ATAK
+  "三维打印", // 3D printing
 ];
 
 export const toolkit = [
