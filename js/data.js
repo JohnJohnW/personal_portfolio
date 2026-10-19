@@ -11,6 +11,17 @@ export const me = {
 
 export const projects = [
   {
+    title: "Mandate",
+    sketch: "vault",
+    year: 2026,
+    desc: "A policy-bound autonomous on-chain wallet agent, built for the 2026 Shenzhen International FinTech Competition: the agent holds a mandate, not a key. The owner sets per-asset spending caps, a daily window, allowlisted counterparties and a kill switch in a vault contract on Base Sepolia. An LLM planner, behind a fail-closed policy engine and a transaction simulator, acts freely inside those limits, needs the owner's EIP-712 co-signature above them, and is reverted by the chain outside them. The property it defends: a fully compromised agent, its prompt, memory, tools and even its private key, cannot move value outside the mandate, because the chain does not trust the agent. A built-in security lab replays 14 documented attack patterns against four defence configurations; only the full product with the on-chain vault stops all 14, and the last two it stops are reverted on-chain with real transaction hashes. It pays a second agent per request over x402 and carries an ERC-8004 identity.",
+    links: [
+      { label: "repo", href: "https://github.com/JohnJohnW/mandate" },
+      { label: "verified contract", href: "https://base-sepolia.blockscout.com/address/0xf0355Cf4f96142CAaA4cbE354762F3E10abBAd2A" },
+    ],
+    stack: ["Solidity", "Foundry", "TypeScript", "Base Sepolia", "EIP-712", "ERC-8004", "x402", "AI agents", "Agent security"],
+  },
+  {
     title: "UN Global AI Hackathon",
     sketch: "statute",
     year: 2026,
