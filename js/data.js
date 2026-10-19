@@ -14,12 +14,12 @@ export const projects = [
     title: "Mandate",
     sketch: "vault",
     year: 2026,
-    desc: "Solo entry to the International Track of the 2026 Shenzhen International FinTech Competition (FinTechathon), hosted by Tsinghua PBC School of Finance with WeBank, on the track's signature topic: the autonomous on-chain wallet. The idea: an AI agent should hold a mandate, not a key. The owner sets spending caps, a daily limit, an allowlist and a kill switch in a vault contract on Base Sepolia. Inside those limits the agent acts on its own, above them it needs the owner's signature, and outside them the chain reverts it, even if the agent, its prompt and its private key are fully compromised. A built-in security lab replays 14 real 2025 to 2026 attacks on AI wallets: the full product stops all 14, with real transaction hashes to show for it.",
+    desc: "Entry to the International Track of the 2026 Shenzhen International FinTech Competition (FinTechathon), hosted by Tsinghua PBC School of Finance with WeBank, on its signature topic, the autonomous on-chain wallet. An AI agent should hold a mandate, not a key. The owner sets caps, a daily limit, an allowlist and a kill switch in a vault contract on Base Sepolia, and the chain reverts anything outside them, even with a fully compromised agent key. Built on EIP-712, ERC-1271, ERC-8004 and x402, mapped to the OWASP LLM Top 10, NIST AI RMF, MITRE ATLAS and FATF guidance. A built-in security lab replays 14 real 2025 to 2026 AI wallet attacks and the full product stops all 14 with real transaction hashes.",
     links: [
       { label: "repo", href: "https://github.com/JohnJohnW/mandate" },
       { label: "verified contract", href: "https://base-sepolia.blockscout.com/address/0xf0355Cf4f96142CAaA4cbE354762F3E10abBAd2A" },
     ],
-    stack: ["Solidity", "Foundry", "TypeScript", "Base Sepolia", "EIP-712", "ERC-8004", "x402", "AI agents", "Agent security"],
+    stack: ["Solidity","Foundry","TypeScript","Base Sepolia","EIP-712","ERC-1271","ERC-8004","x402","OWASP LLM Top 10","Agent security"],
   },
   {
     title: "UN Global AI Hackathon",
