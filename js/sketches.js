@@ -11,6 +11,50 @@ const cycle = (t, rate, n) => Math.floor(t * rate) % n;
 const blink = (t, rate = 2) => (Math.floor(t * rate) % 2 ? 1 : 0.35);
 
 const SKETCHES = {
+  // An agent asks to pay. Each request walks the layers to the vault on
+  // chain: inside the mandate it goes through, over the cap the chain
+  // reverts it, and nothing the agent says can change that.
+  vault(s, t) {
+    const asks = [
+      { amt: "0.001 ETH", to: "alice", ok: true },
+      { amt: "0.0005 ETH", to: "oracle", ok: true },
+      { amt: "0.9 ETH", to: "0xbad..", ok: false },
+    ];
+    const a = asks[Math.floor(t / 4) % asks.length];
+    // how far this request has travelled, 0 to 1
+    const p = (t % 4) / 4;
+    const col = Math.floor(p * 36);
+
+    s.put(0, 1, "[ agent ]", 0.9);
+    s.put(2, 2, "plan", 0.4);
+    s.put(9, 1, "->", 0.4);
+    s.put(11, 1, "[policy]", col >= 9 ? 0.9 : 0.5);
+    s.put(19, 1, "->", 0.4);
+    s.put(21, 1, "[ sim ]", col >= 19 ? 0.9 : 0.5);
+    s.put(28, 1, "->", 0.4);
+    rows(s, 30, 0, ["+----------+", "|  VAULT   |", "| on-chain |", "+----------+"], 0.9);
+
+    // the request moves right along the row under the boxes
+    s.put(Math.min(col, 25), 4, a.amt + " to " + a.to, 1);
+
+    // the mandate the chain enforces, stated under the vault
+    s.put(30, 5, "cap 0.001/tx", 0.5);
+    s.put(30, 6, "window 0.005", 0.5);
+    s.put(30, 7, "allowlist", 0.5);
+
+    if (p >= 0.8) {
+      if (a.ok) s.put(0, 9, "ok: inside the mandate, executed", 0.9);
+      else {
+        s.put(0, 9, "! reverted: AbovePerTxCap", blink(t, 3));
+        s.put(0, 10, "the chain does not trust the agent", 0.6);
+      }
+    } else {
+      const stage = ["policy", "simulate", "vault"][Math.min(2, Math.floor(p * 3.75))];
+      s.put(0, 9, "checking " + stage + "...", 0.4);
+    }
+    s.put(0, 11, "[kill switch]", blink(t, 0.5));
+  },
+
   // a law degree fanning out into the careers the guide covers
   pathways(s, t) {
     const ends = ["clerkship", "in-house", "policy", "legal tech", "community law"];
