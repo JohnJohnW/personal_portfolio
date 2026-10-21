@@ -11,10 +11,10 @@ export const me = {
 
 export const projects = [
   {
-    title: "Tsinghua University Shenzhen FinTechathon - Mandate",
+    title: "Tsinghua x WeBank Shenzhen FinTechathon",
     sketch: "vault",
     year: 2026,
-    desc: "Entry to the International Track of the 2026 Shenzhen International FinTech Competition (FinTechathon), hosted by Tsinghua PBC School of Finance with WeBank, on its signature topic, the autonomous on-chain wallet. An AI agent should hold a mandate, not a key. The owner sets caps, a daily limit, an allowlist and a kill switch in a vault contract on Base Sepolia, and the chain reverts anything outside them, even with a fully compromised agent key. Built on EIP-712, ERC-1271, ERC-8004 and x402, mapped to the OWASP LLM Top 10, NIST AI RMF, MITRE ATLAS and FATF guidance. A built-in security lab replays 14 real 2025 to 2026 AI wallet attacks and the full product stops all 14 with real transaction hashes.",
+    desc: "Mandate, our entry to the International Track of the 2026 Shenzhen International FinTech Competition (FinTechathon), hosted by Tsinghua PBC School of Finance with WeBank, on its signature topic, the autonomous on-chain wallet. An AI agent should hold a mandate, not a key. The owner sets caps, a daily limit, an allowlist and a kill switch in a vault contract on Base Sepolia, and the chain reverts anything outside them, even with a fully compromised agent key. Built on EIP-712, ERC-1271, ERC-8004 and x402, mapped to the OWASP LLM Top 10, NIST AI RMF, MITRE ATLAS and FATF guidance. A built-in security lab replays 14 real 2025 to 2026 AI wallet attacks and the full product stops all 14 with real transaction hashes.",
     links: [
       { label: "repo", href: "https://github.com/JohnJohnW/mandate" },
       { label: "verified contract", href: "https://base-sepolia.blockscout.com/address/0xf0355Cf4f96142CAaA4cbE354762F3E10abBAd2A" },
